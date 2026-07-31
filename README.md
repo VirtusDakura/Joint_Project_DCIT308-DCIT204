@@ -59,11 +59,10 @@ mvn exec:java
 ```
 
 ### Database Setup
-- **Option A (Local PostgreSQL)**: Start PostgreSQL using Docker:
+- **PostgreSQL**: Start PostgreSQL using Docker:
   ```bash
   docker compose up -d
   ```
-- **Option B (SQLite Fallback)**: No setup needed. The system automatically creates a local `dsa_optimizer.db` file if PostgreSQL is unavailable.
 
 ---
 
