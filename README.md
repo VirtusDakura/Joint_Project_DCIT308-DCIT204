@@ -1,7 +1,7 @@
 # Ghana Smart Service Operations Optimizer
 > **University of Ghana - Department of Computer Science**  
 > **Course**: DCIT 204 / DCIT 308: Data Structures & Algorithms I & II  
-> **Language**: Java 17 | **Build Tool**: Maven | **Database**: PostgreSQL / SQLite  
+> **Language**: Java 17 | **Build Tool**: Maven | **Database**: PostgreSQL
 
 ---
 
