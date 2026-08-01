@@ -1,72 +1,29 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom Hash Table with separate chaining for O(1) key lookups (Module M3).
+ * Custom Hash Table using separate chaining for collision handling.
+ *
+ * Assigned to: Collins Edumadze Egyir (22233318)
+ *
+ * Required operations:
+ *   - put(K key, V value)     : Insert or update a key-value pair
+ *   - get(K key)              : Return value or null
+ *   - remove(K key)           : Remove and return value
+ *   - containsKey(K key)
+ *   - size()
+ *   - loadFactor()            : Current size / table capacity
+ *   - collisionCount()        : Total collisions across all buckets
+ *   - keys()                  : Return all keys
+ *
+ * Evidence to produce:
+ *   - Collision statistics experiment for load factors at 100 to 20,000 keys
+ *   - Unit tests for put/get/remove, duplicate key update, key not found, empty table
  */
 public class CustomHashTable<K, V> {
 
-    private static class Entry<K, V> {
-        K key;
-        V value;
-        Entry<K, V> next;
+    // TODO: Implement the bucket array (array of linked chains), hash function,
+    //       and all required methods.
+    // Hint: Each bucket is a linked list of Entry(key, value, next) nodes.
+    //       Hash index = Math.abs(key.hashCode() % capacity).
 
-        Entry(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
-
-    private Entry<K, V>[] buckets;
-    private int capacity;
-    private int size;
-
-    @SuppressWarnings("unchecked")
-    public CustomHashTable(int capacity) {
-        this.capacity = capacity;
-        this.buckets = new Entry[capacity];
-        this.size = 0;
-    }
-
-    private int hash(K key) {
-        return Math.abs(key.hashCode() % capacity);
-    }
-
-    public void put(K key, V value) {
-        int index = hash(key);
-        Entry<K, V> current = buckets[index];
-
-        while (current != null) {
-            if (current.key.equals(key)) {
-                current.value = value;
-                return;
-            }
-            current = current.next;
-        }
-
-        Entry<K, V> newEntry = new Entry<>(key, value);
-        newEntry.next = buckets[index];
-        buckets[index] = newEntry;
-        size++;
-    }
-
-    public V get(K key) {
-        int index = hash(key);
-        Entry<K, V> current = buckets[index];
-
-        while (current != null) {
-            if (current.key.equals(key)) {
-                return current.value;
-            }
-            current = current.next;
-        }
-        return null;
-    }
-
-    public boolean containsKey(K key) {
-        return get(key) != null;
-    }
-
-    public int size() {
-        return size;
-    }
 }

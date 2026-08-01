@@ -1,27 +1,16 @@
 package org.ug.dsa.services;
 
-import org.ug.dsa.datastructures.CustomHeap;
-import org.ug.dsa.datastructures.CustomQueue;
-import org.ug.dsa.models.ServiceRequest;
-
 /**
- * Service scheduling engine implementing FIFO queue and priority queue dispatch rules (Module M5).
+ * Service scheduling engine implementing FIFO, circular, deque, and priority-based dispatch rules.
+ *
+ * This service uses CustomQueue, CustomCircularQueue, CustomDeque, and CustomHeap
+ * to model different dispatch strategies for food delivery orders.
+ *
+ * Required after data structures are implemented by DCIT 308 team.
  */
 public class SchedulingService {
 
-    private final CustomQueue<ServiceRequest> fifoQueue = new CustomQueue<>();
-    private final CustomHeap<ServiceRequest> priorityQueue = new CustomHeap<>(100);
+    // TODO: Implement scheduling logic using CustomQueue, CustomHeap, etc.
+    //       Provide methods for FIFO dispatch, priority dispatch, and urgent insertion.
 
-    public void submitRequest(ServiceRequest request) {
-        fifoQueue.enqueue(request);
-        priorityQueue.insert(request);
-    }
-
-    public ServiceRequest getNextFifoRequest() {
-        return fifoQueue.isEmpty() ? null : fifoQueue.dequeue();
-    }
-
-    public ServiceRequest getNextPriorityRequest() {
-        return priorityQueue.isEmpty() ? null : priorityQueue.extractMin();
-    }
 }

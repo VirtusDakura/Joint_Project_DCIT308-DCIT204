@@ -1,46 +1,28 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom Disjoint Set (Union-Find) with path compression for Kruskal's MST algorithm (Module M3, M7).
+ * Custom Disjoint Set (Union-Find) with path compression and union by rank.
+ * Used by Kruskal's MST algorithm to detect cycles during edge selection.
+ *
+ * Assigned to: Seglah Emmanuel (22144981)
+ *
+ * Required operations:
+ *   - makeSet(int x)
+ *   - find(int x)             : With path compression
+ *   - union(int x, int y)     : By rank or size
+ *   - connected(int x, int y) : Check if two elements are in the same set
+ *   - getComponentCount()     : Number of disjoint sets remaining
+ *
+ * Evidence to produce:
+ *   - Kruskal connectivity trace showing union/find calls as edges are processed
+ *   - Demonstrate path compression flattening the tree
+ *   - Unit tests for single element set, union of two sets, connected components count
  */
 public class CustomDisjointSet {
 
-    private final int[] parent;
-    private final int[] rank;
+    // TODO: Implement the parent[] and rank[] arrays, and all required methods.
+    // Hint: Initially parent[i] = i (each element is its own set).
+    //       find() should compress the path to the root.
+    //       union() should attach the shorter tree under the taller tree.
 
-    public CustomDisjointSet(int n) {
-        parent = new int[n];
-        rank = new int[n];
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            rank[i] = 0;
-        }
-    }
-
-    public int find(int i) {
-        if (parent[i] != i) {
-            parent[i] = find(parent[i]); // Path compression
-        }
-        return parent[i];
-    }
-
-    public boolean union(int i, int j) {
-        int rootI = find(i);
-        int rootJ = find(j);
-
-        if (rootI == rootJ) {
-            return false; // Already in the same set
-        }
-
-        // Union by rank
-        if (rank[rootI] < rank[rootJ]) {
-            parent[rootI] = rootJ;
-        } else if (rank[rootI] > rank[rootJ]) {
-            parent[rootJ] = rootI;
-        } else {
-            parent[rootJ] = rootI;
-            rank[rootI]++;
-        }
-        return true;
-    }
 }

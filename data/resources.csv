@@ -1,0 +1,5 @@
+resource_id,resource_type,home_location_id,capacity,availability_status
+RIDER-101,Motorbike (Kofi),L011,3,AVAILABLE
+RIDER-102,Motorbike (Kwame),L011,3,AVAILABLE
+RIDER-103,Bicycle (Yaw),L011,1,AVAILABLE
+RIDER-104,Express Van (Ama),L012,10,AVAILABLE

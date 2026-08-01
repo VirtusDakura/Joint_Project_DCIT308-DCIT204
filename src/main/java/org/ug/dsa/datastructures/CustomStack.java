@@ -1,48 +1,26 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom LIFO Stack implementation for audit/undo operations (Module M3).
+ * Custom LIFO Stack for undo/audit operations and recursion simulation.
+ *
+ * Assigned to: Seglah Emmanuel (22144981)
+ *
+ * Required operations:
+ *   - push(T element)
+ *   - pop()              : Remove and return top element
+ *   - peek()             : View top element without removing
+ *   - isEmpty()
+ *   - isFull()           : If using array-backed implementation
+ *   - size()
+ *
+ * Evidence to produce:
+ *   - Undo log demo: push audit events, then pop to undo recent operations
+ *   - Unit tests for push/pop on empty stack, peek without removing,
+ *     push on full stack, pop on empty stack
  */
 public class CustomStack<T> {
-    
-    private static class Node<T> {
-        T data;
-        Node<T> next;
-        Node(T data) { this.data = data; }
-    }
 
-    private Node<T> top;
-    private int size;
+    // TODO: Implement using either a linked-list or an array.
+    //       If array-backed, handle capacity and isFull().
 
-    public void push(T element) {
-        Node<T> newNode = new Node<>(element);
-        newNode.next = top;
-        top = newNode;
-        size++;
-    }
-
-    public T pop() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Stack is empty");
-        }
-        T data = top.data;
-        top = top.next;
-        size--;
-        return data;
-    }
-
-    public T peek() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Stack is empty");
-        }
-        return top.data;
-    }
-
-    public boolean isEmpty() {
-        return top == null;
-    }
-
-    public int size() {
-        return size;
-    }
 }

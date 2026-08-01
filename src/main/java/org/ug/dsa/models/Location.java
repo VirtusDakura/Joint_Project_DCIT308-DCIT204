@@ -1,7 +1,7 @@
 package org.ug.dsa.models;
 
 /**
- * Represents a geographical node or facility in the local Ghanaian service network.
+ * Represents a geographical node or facility in the service operations network.
  */
 public record Location(
     String locationId,

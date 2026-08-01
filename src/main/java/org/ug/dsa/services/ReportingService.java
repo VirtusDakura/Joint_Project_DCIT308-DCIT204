@@ -1,70 +1,26 @@
 package org.ug.dsa.services;
 
-import org.ug.dsa.database.DatabaseManager;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 /**
- * Empirical benchmarking & report engine (Modules M9, M10).
- * Logs time (ns) and memory (KB) to algorithm_runs DB table, and exports CSV for Excel chart creation.
+ * Handles recording algorithm runtime metrics and exporting benchmark data.
+ *
+ * Assigned to: Seglah Emmanuel (22144981)
+ *
+ * Required methods:
+ *   - logAlgorithmRun(String algorithmName, int inputSize, long timeNs, long memoryKb)
+ *       Inserts a run record into the algorithm_runs database table.
+ *   - exportRunsToCSV(String outputPath)
+ *       Exports all algorithm_runs to a CSV file for Excel/Google Sheets graphing.
+ *       Columns: runId, algorithmName, inputSize, timeNs, memoryKb, dateRun
+ *   - printRunSummary()
+ *       Prints a formatted summary of all runs grouped by algorithm name.
+ *
+ * Usage: All team members will call logAlgorithmRun() after measuring their
+ * algorithm's performance using System.nanoTime() and Runtime.getRuntime().
+ *
+ * Dependencies: java.sql.* (JDBC), java.io.* (CSV export) — both allowed.
  */
 public class ReportingService {
 
-    public static void logAlgorithmRun(String algorithmName, int inputSize, long timeNs, long memoryKb) {
-        String sql = """
-            INSERT INTO algorithm_runs (run_id, algorithm_name, input_size, time_ns, memory_kb, date_run)
-            VALUES (?, ?, ?, ?, ?, ?);
-            """;
+    // TODO: Implement benchmark logging to database and CSV export.
 
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, "RUN-" + UUID.randomUUID().toString().substring(0, 8));
-            pstmt.setString(2, algorithmName);
-            pstmt.setInt(3, inputSize);
-            pstmt.setLong(4, timeNs);
-            pstmt.setLong(5, memoryKb);
-            pstmt.setString(6, LocalDateTime.now().toString());
-            pstmt.executeUpdate();
-            
-            System.out.printf("[ReportingService] Recorded run: %s | N=%d | Time: %d ns | Memory: %d KB%n",
-                    algorithmName, inputSize, timeNs, memoryKb);
-
-        } catch (SQLException e) {
-            System.err.println("[ReportingService] Error recording algorithm run: " + e.getMessage());
-        }
-    }
-
-    public static void exportRunsToCSV(String exportFilePath) {
-        String sql = "SELECT * FROM algorithm_runs ORDER BY algorithm_name, input_size";
-
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery();
-             PrintWriter writer = new PrintWriter(new FileWriter(exportFilePath))) {
-
-            writer.println("run_id,algorithm_name,input_size,time_ns,memory_kb,date_run");
-            while (rs.next()) {
-                writer.printf("%s,%s,%d,%d,%d,%s%n",
-                        rs.getString("run_id"),
-                        rs.getString("algorithm_name"),
-                        rs.getInt("input_size"),
-                        rs.getLong("time_ns"),
-                        rs.getLong("memory_kb"),
-                        rs.getString("date_run"));
-            }
-            System.out.println("[ReportingService] Successfully exported benchmarking CSV to: " + exportFilePath);
-
-        } catch (SQLException | IOException e) {
-            System.err.println("[ReportingService] Error exporting CSV: " + e.getMessage());
-        }
-    }
 }

@@ -1,57 +1,25 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom FIFO Queue implementation for service request dispatch (Module M3).
+ * Custom FIFO Queue for first-come-first-served service request dispatch.
+ *
+ * Assigned to: Rushdan Delimwine Antiku (22102540)
+ *
+ * Required operations:
+ *   - enqueue(T element)  : Add to the rear
+ *   - dequeue()           : Remove and return from the front
+ *   - peek()              : View front element without removing
+ *   - isEmpty()
+ *   - isFull()            : If using array-backed implementation
+ *   - size()
+ *
+ * Evidence to produce:
+ *   - Trace showing front/rear pointer movement after each enqueue/dequeue
+ *   - Unit tests for enqueue until full, dequeue until empty, enqueue on full queue
  */
 public class CustomQueue<T> {
 
-    private static class Node<T> {
-        T data;
-        Node<T> next;
-        Node(T data) { this.data = data; }
-    }
+    // TODO: Implement using either a linked-list or an array.
+    //       If linked-list, maintain head (front) and tail (rear) pointers.
 
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
-
-    public void enqueue(T element) {
-        Node<T> newNode = new Node<>(element);
-        if (tail != null) {
-            tail.next = newNode;
-        }
-        tail = newNode;
-        if (head == null) {
-            head = tail;
-        }
-        size++;
-    }
-
-    public T dequeue() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Queue is empty");
-        }
-        T data = head.data;
-        head = head.next;
-        if (head == null) {
-            tail = null;
-        }
-        size--;
-        return data;
-    }
-
-    public T peek() {
-        if (isEmpty()) {
-            throw new IllegalStateException("Queue is empty");
-        }
-        return head.data;
-    }
-
-    public boolean isEmpty() {
-        return head == null;
-    }
-
-    public int size() {
-        return size;
-    }
 }

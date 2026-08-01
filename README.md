@@ -1,14 +1,15 @@
-# Ghana Smart Service Operations Optimizer
-> **University of Ghana - Department of Computer Science**  
+# Ghana Smart Food & Parcel Delivery System
+> **University of Ghana — Department of Computer Science**  
 > **Course**: DCIT 204 / DCIT 308: Data Structures & Algorithms I & II  
-> **Language**: Java 17 | **Build Tool**: Maven | **Database**: PostgreSQL
+> **Group Leader**: Virtus Dakura (22052950)  
+> **Setting**: Ghana Food & Parcel Delivery Services  
 
 ---
 
 ## 📌 Project Overview
-The **Ghana Smart Service Operations Optimizer** is a practical semester project integrating algorithm design, custom data structures, empirical runtime analysis, graph routing, and database persistence.
+The **Ghana ChowExpress Food Delivery Optimizer** is a service operations platform tailored to Ghanaian food delivery workflows. It connects vendors (Papaye, Bush Canteen, Buka, Gobə Joint) to customer delivery zones (hostels, office hubs, campus stops) via dispatch riders.
 
-The system loads Ghanaian operational dataset records (Locations, Roads, Service Requests, Resources) from a database, loads them into custom-built data structures, executes optimized scheduling and routing algorithms, and records empirical performance metrics ($N$ vs $Time(ns)$ / $Memory(KB)$).
+The platform loads operational data from a database into custom-built data structures, applies algorithms (searching, sorting, graph routing, greedy/DP optimization), verifies correctness with trace tables and unit tests, and measures empirical runtime efficiency.
 
 ---
 
@@ -16,58 +17,70 @@ The system loads Ghanaian operational dataset records (Locations, Roads, Service
 
 ```text
 Joint_Project_DCIT308-DCIT204/
-├── pom.xml                   # Maven project configuration (Java 17, PostgreSQL, JUnit 5)
-├── docker-compose.yml        # PostgreSQL container setup
+├── pom.xml                        # Maven build config (Java 17, PostgreSQL, JUnit 5)
 ├── README.md
-├── data/                     # Seed CSV datasets (locations, roads, requests, resources)
-├── docs/                     # Project Brief & Kickoff Meeting Agenda
-│   ├── MEETING_AGENDA.md
-│   └── PROJECT_BRIEF_SUMMARY.md
+├── data/                          # Operational CSV seed datasets
+│   ├── locations.csv              # 50+ Ghanaian locations
+│   ├── roads.csv                  # 100+ weighted road edges
+│   ├── service_requests.csv       # 300+ food delivery orders
+│   └── resources.csv              # 30+ delivery riders
+├── docs/                          # Project documentation
+│   ├── PROJECT_CHARTER.md         # Team charter, sprint plan, submission items
+│   ├── PROJECT_BRIEF_SUMMARY.md   # Key constraints from the project brief
+│   ├── TEAM_ROSTER_AND_DEFENSE.md # Roster + oral defense pairing matrix
+│   └── TASK_DISTRIBUTION.md       # Individual member task assignments
 └── src/
     ├── main/java/org/ug/dsa/
-    │   ├── Main.java         # Application Entry Point
-    │   ├── models/           # Location, Road, ServiceRequest, Resource
-    │   ├── database/         # DatabaseManager & JDBC Persistence (M2)
-    │   ├── datastructures/   # Custom LinkedList, Stack, Queue, Heap, BST, HashTable, Graph (M3)
-    │   ├── algorithms/       # Search, Sort, Graph, Optimization Engines (M4, M7, M8)
-    │   └── services/         # Scheduling, Routing, Reporting & CSV Exporter (M5, M6, M9)
-    └── test/java/org/ug/dsa/ # JUnit 5 automated unit test suite
+    │   ├── Main.java              # Console menu entry point
+    │   ├── models/                # Data models: Location, Road, ServiceRequest, Resource
+    │   ├── database/              # DatabaseManager (PostgreSQL/SQLite JDBC)
+    │   ├── datastructures/        # DCIT 308: Custom data structures
+    │   │   ├── CustomDynamicArray.java
+    │   │   ├── CustomLinkedList.java
+    │   │   ├── CustomStack.java
+    │   │   ├── CustomQueue.java
+    │   │   ├── CustomCircularQueue.java
+    │   │   ├── CustomDeque.java
+    │   │   ├── CustomHeap.java
+    │   │   ├── CustomBST.java
+    │   │   ├── CustomRedBlackTree.java
+    │   │   ├── CustomBTree.java
+    │   │   ├── CustomHashTable.java
+    │   │   ├── CustomSet.java
+    │   │   ├── CustomMap.java
+    │   │   ├── CustomDisjointSet.java
+    │   │   └── CustomGraph.java
+    │   ├── algorithms/            # DCIT 204: Algorithm implementations
+    │   │   ├── search/            # LinearSearch, BinarySearch
+    │   │   ├── sorting/           # SelectionSort, InsertionSort, MergeSort, QuickSort
+    │   │   ├── graph/             # BFS, DFS, Dijkstra, Prim, Kruskal
+    │   │   └── optimization/      # GreedyBatching, DynamicProgrammingBatching
+    │   ├── services/              # Scheduling, Routing, Reporting & CSV export
+    │   └── util/                  # IndexParameters (index-number-derived constants)
+    └── test/java/org/ug/dsa/      # JUnit 5 unit tests (40+ required)
 ```
 
 ---
 
-## 🛠️ Requirements & Quickstart
+## 🛠️ Quickstart
 
-### Prerequisites
-- **JDK 17** or higher installed
-- **Apache Maven 3.8+** installed
-
-### Build & Run Instructions
+### Compilation & Execution
 ```bash
-# 1. Clone repository
-git clone <repo-url>
-cd Joint_Project_DCIT308-DCIT204
+# 1. Compile Java source code
+javac -d bin $(find src/main/java -name "*.java")
 
-# 2. Compile source code
-mvn clean compile
+# 2. Run the console application
+java -cp bin org.ug.dsa.Main
 
-# 3. Run automated JUnit tests
-mvn test
-
-# 4. Execute main application
-mvn exec:java
+# 3. Or using Maven
+mvn clean compile exec:java
 ```
 
-### Database Setup
-- **PostgreSQL**: Start PostgreSQL using Docker:
-  ```bash
-  docker compose up -d
-  ```
+### Database
+- Connects to PostgreSQL when available (`DB_URL`, `DB_USER`, `DB_PASS` environment variables).
+- Automatically falls back to local SQLite (`dsa_optimizer.db`) for offline development.
 
 ---
 
-## 🌿 Git & Team Workflow Guidelines
-1. **Never commit directly to `main`**.
-2. Create feature branches using the naming convention: `feature/M<module_number>-<feature_name>` (e.g., `feature/M3-custom-heap`).
-3. Submit a **Pull Request (PR)** for review before merging into `main`.
-4. Ensure all JUnit unit tests pass (`mvn test`) before submitting a PR.
+## 🛡️ Oral Defense
+Every team member must defend **1 data structure** and **1 algorithm** during the oral presentation. See [TEAM_ROSTER_AND_DEFENSE.md](docs/TEAM_ROSTER_AND_DEFENSE.md) for exact pairings.

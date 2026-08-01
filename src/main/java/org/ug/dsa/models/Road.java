@@ -1,7 +1,7 @@
 package org.ug.dsa.models;
 
 /**
- * Represents a weighted edge between two locations in the Ghanaian network.
+ * Represents a weighted road edge connecting two locations in the network.
  */
 public record Road(
     String roadId,
@@ -12,7 +12,7 @@ public record Road(
     double conditionWeight
 ) {
     /**
-     * Calculates the effective traversal weight combining distance and condition.
+     * Calculates effective traversal cost considering distance and road condition.
      */
     public double getEffectiveWeight() {
         return distanceKm * conditionWeight;

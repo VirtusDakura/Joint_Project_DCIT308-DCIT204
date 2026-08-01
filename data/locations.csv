@@ -1,0 +1,13 @@
+location_id,name,area,location_type,x_coord,y_coord
+L001,Papaye Fast Food,Spintex,VENDOR,5.621,0.112
+L002,Bush Canteen,Legon,VENDOR,5.652,0.186
+L003,Buka Restaurant,Osu,VENDOR,5.556,0.182
+L004,Starbites Restaurant,East Legon,VENDOR,5.638,0.155
+L005,Auntie Muni Waakye,Labone,VENDOR,5.561,0.169
+L006,Gobə Joint (CS Dept),Legon,VENDOR,5.651,0.188
+L007,Commonwealth Hall,Legon,CUSTOMER_ZONE,5.653,0.191
+L008,TF Hostel,Legon,CUSTOMER_ZONE,5.642,0.178
+L009,Airport City Offices,Airport,CUSTOMER_ZONE,5.605,0.171
+L010,Ridge Hospital Annex,Ridge,CUSTOMER_ZONE,5.560,0.198
+L011,Legon Rider Base,Legon,RIDER_STATION,5.650,0.185
+L012,Spintex Dispatch Base,Spintex,RIDER_STATION,5.620,0.110
