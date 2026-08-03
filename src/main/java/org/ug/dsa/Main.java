@@ -1,4 +1,11 @@
 package org.ug.dsa;
+import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching;
+import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching.BatchingResult;
+import org.ug.dsa.models.Resource;
+import org.ug.dsa.models.ServiceRequest;
+
+// import org.ug.dsa.algorithms.optimization.package.BatchingResult
+
 
 /**
  * Main application entry point for Ghana Smart Food and Parcel Delivery System.
@@ -28,5 +35,36 @@ public class Main {
         System.out.println();
         System.out.println("TODO: Implement the interactive console menu here.");
         System.out.println("      See TASK_DISTRIBUTION.md for full requirements.");
+
+
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        ServiceRequest[] demoRequests = new ServiceRequest[] {
+            new ServiceRequest("ORD-001", "L002", "L007", "Hot Meal (Jollof)", 5, now, now.plusMinutes(30), "NEW"),
+            new ServiceRequest("ORD-002", "L006", "L008", "Gobe Special", 4, now, now.plusMinutes(30), "NEW"),
+            new ServiceRequest("ORD-003", "L004", "L009", "Express Burger Meal", 3, now, now.plusMinutes(40), "NEW"),
+            new ServiceRequest("ORD-004", "L001", "L009", "Fried Rice Family Pack", 4, now, now.plusMinutes(45), "NEW"),
+            new ServiceRequest("ORD-005", "L003", "L010", "Waakye Party Pack", 5, now, now.plusMinutes(50), "NEW"),
+        };
+
+        Resource rider = new Resource("RIDER-103", "Bicycle (Yaw)", "L011", 3, "AVAILABLE");
+
+        System.out.println("Index-number derived demo parameter (digit sum of " + DynamicProgrammingBatching.OWNER_INDEX_NUMBER + "): " + DynamicProgrammingBatching.INDEX_DIGIT_SUM);
+        System.out.println("Batching " + demoRequests.length + " requests onto " + rider.resourceType()
+                + " (capacity = " + rider.capacity() + ")");
+        System.out.println();
+
+        DynamicProgrammingBatching batcher = new DynamicProgrammingBatching();
+        BatchingResult result = batcher.solve(demoRequests, rider);
+
+        System.out.println(DynamicProgrammingBatching.renderTable(result));
+        System.out.println("Total urgency value achieved: " + result.totalValue);
+        System.out.println("Capacity used: " + result.totalWeightUsed + " / " + result.capacity);
+        System.out.println("Selected orders:");
+        for (int i = 0; i < result.selectedCount; i++) {
+            ServiceRequest r = result.selectedRequests[i];
+            System.out.println("  - " + r.requestId() + " (" + r.category() + ", urgency=" + r.urgency() + ")");
+        }
+    
     }
 }
