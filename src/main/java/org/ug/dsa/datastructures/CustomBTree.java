@@ -1,7 +1,6 @@
 package org.ug.dsa.datastructures;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Custom B-Tree for database index simulation.
@@ -218,13 +217,13 @@ public class CustomBTree<K extends Comparable<K>, V> {
 
     // ---------- TRAVERSAL ----------
 
-    public List<K> inorderTraversal() {
-        List<K> result = new ArrayList<>();
+    public CustomList<K> inorderTraversal() {
+        CustomList<K> result = new CustomDynamicArray<>();
         inorderRecursive(root, result);
         return result;
     }
 
-    private void inorderRecursive(BTreeNode node, List<K> result) {
+    private void inorderRecursive(BTreeNode node, CustomList<K> result) {
         if (node == null) return;
 
         int i;

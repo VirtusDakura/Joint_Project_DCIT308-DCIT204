@@ -77,8 +77,12 @@ public class CustomBTreeTest {
             tree.insert(k, "Location-" + k);
         }
 
-        List<Integer> expected = List.of(10, 20, 30, 40, 50, 60, 70, 80, 90);
-        assertEquals(expected, tree.inorderTraversal());
+        CustomList<Integer> traversal = tree.inorderTraversal();
+        int[] expected = {10, 20, 30, 40, 50, 60, 70, 80, 90};
+        assertEquals(expected.length, traversal.size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], traversal.get(i));
+        }
     }
 
     // ---------- NODE SPLITTING (core checklist requirement) ----------
@@ -124,7 +128,7 @@ public class CustomBTreeTest {
         }
 
         // Sorted order must be preserved despite all the splitting/restructuring
-        List<Integer> traversal = tree.inorderTraversal();
+        CustomList<Integer> traversal = tree.inorderTraversal();
         for (int i = 0; i < traversal.size(); i++) {
             assertEquals(i + 1, traversal.get(i));
         }
