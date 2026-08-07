@@ -2,4 +2,32 @@ resource_id,resource_type,home_location_id,capacity,availability_status
 RIDER-101,Motorbike (Kofi),L011,3,AVAILABLE
 RIDER-102,Motorbike (Kwame),L011,3,AVAILABLE
 RIDER-103,Bicycle (Yaw),L011,1,AVAILABLE
-RIDER-104,Express Van (Ama),L012,10,AVAILABLE
+RIDER-105,Motorbike (Kojo),L012,3,AVAILABLE
+RIDER-106,Motorbike (Daniel),L012,3,BUSY
+RIDER-107,Bicycle (Prince),L012,1,AVAILABLE
+RIDER-108,Motorbike (Michael),L046,3,AVAILABLE
+RIDER-109,Motorbike (Samuel),L046,3,IN_TRANSIT
+RIDER-110,Tricycle (Isaac),L046,5,AVAILABLE
+RIDER-111,Motorbike (Emmanuel),L047,3,BUSY
+RIDER-112,Motorbike (Felix),L047,3,AVAILABLE
+RIDER-113,Express Van (Mabel),L047,10,AVAILABLE
+RIDER-114,Motorbike (Richard),L048,3,AVAILABLE
+RIDER-115,Bicycle (Kelvin),L048,1,OFFLINE
+RIDER-116,Motorbike (Joseph),L048,3,BUSY
+RIDER-117,Motorbike (David),L049,3,AVAILABLE
+RIDER-118,Express Van (Akosua),L049,10,IN_TRANSIT
+RIDER-119,Motorbike (Patrick),L049,3,AVAILABLE
+RIDER-120,Motorbike (Ebenezer),L050,3,AVAILABLE
+RIDER-121,Bicycle (Nana),L050,1,BUSY
+RIDER-122,Tricycle (Eric),L050,5,MAINTENANCE
+RIDER-123,Motorbike (Augustine),L051,3,AVAILABLE
+RIDER-124,Motorbike (Justice),L051,3,BUSY
+RIDER-125,Motorbike (Stephen),L052,3,AVAILABLE
+RIDER-126,Tricycle (Bernard),L052,5,AVAILABLE
+RIDER-127,Motorbike (Francis),L052,3,IN_TRANSIT
+RIDER-128,Express Van (Linda),L011,10,AVAILABLE
+RIDER-129,Motorbike (Moses),L046,3,AVAILABLE
+RIDER-130,Motorbike (Bright),L047,3,BUSY
+RIDER-131,Bicycle (Elvis),L048,1,AVAILABLE
+RIDER-132,Motorbike (Collins),L049,3,OFFLINE
+

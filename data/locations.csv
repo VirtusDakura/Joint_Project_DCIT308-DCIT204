@@ -11,3 +11,43 @@ L009,Airport City Offices,Airport,CUSTOMER_ZONE,5.605,0.171
 L010,Ridge Hospital Annex,Ridge,CUSTOMER_ZONE,5.560,0.198
 L011,Legon Rider Base,Legon,RIDER_STATION,5.650,0.185
 L012,Spintex Dispatch Base,Spintex,RIDER_STATION,5.620,0.110
+L013,KFC Legon,Legon,VENDOR,5.649,0.183
+L014,Pizza Inn East Legon,East Legon,VENDOR,5.640,0.156
+L015,Chicken Republic Airport,Airport,VENDOR,5.606,0.170
+L016,Eddy's Pizza Madina,Madina,VENDOR,5.683,0.167
+L017,Palace Chinese Restaurant,Osu,VENDOR,5.554,0.184
+L018,Green Eats Salad Bar,Cantonments,VENDOR,5.571,0.173
+L019,Papaye Legon,Legon,VENDOR,5.651,0.184
+L020,Chicking East Legon,East Legon,VENDOR,5.638,0.158
+L021,Frankie's Foods,Osu,VENDOR,5.557,0.182
+L022,Cuppa Cappuccino,Airport,VENDOR,5.604,0.169
+L023,Yaw's Grill,Madina,VENDOR,5.685,0.165
+L024,Akwaaba Kitchen,Spintex,VENDOR,5.623,0.114
+L025,Jollof House,Haatso,VENDOR,5.667,0.205
+L026,Waakye Special,Atomic,VENDOR,5.664,0.221
+L027,Mensah Sarbah Hall,Legon,CUSTOMER_ZONE,5.651,0.189
+L028,Volta Hall,Legon,CUSTOMER_ZONE,5.653,0.190
+L029,Akuafo Hall,Legon,CUSTOMER_ZONE,5.654,0.188
+L030,Legon Hall,Legon,CUSTOMER_ZONE,5.654,0.187
+L031,UG Business School,Legon,CUSTOMER_ZONE,5.650,0.186
+L032,Balme Library,Legon,CUSTOMER_ZONE,5.650,0.190
+L033,Great Hall,Legon,CUSTOMER_ZONE,5.652,0.187
+L034,University Hospital,Legon,CUSTOMER_ZONE,5.655,0.185
+L035,A&C Mall,East Legon,CUSTOMER_ZONE,5.639,0.152
+L036,American House,East Legon,CUSTOMER_ZONE,5.636,0.149
+L037,Madina Zongo Junction,Madina,CUSTOMER_ZONE,5.682,0.168
+L038,Ritz Junction,Madina,CUSTOMER_ZONE,5.680,0.170
+L039,Atomic Junction,Atomic,CUSTOMER_ZONE,5.666,0.220
+L040,Haatso Station,Haatso,CUSTOMER_ZONE,5.668,0.206
+L041,Labone Estates,Labone,CUSTOMER_ZONE,5.562,0.171
+L042,Cantonments Offices,Cantonments,CUSTOMER_ZONE,5.570,0.175
+L043,Osu Oxford Street,Osu,CUSTOMER_ZONE,5.553,0.181
+L044,East Legon Executive Homes,East Legon,CUSTOMER_ZONE,5.641,0.154
+L045,Madina Market,Madina,CUSTOMER_ZONE,5.684,0.166
+L046,Madina Rider Station,Madina,RIDER_STATION,5.683,0.167
+L047,East Legon Rider Station,East Legon,RIDER_STATION,5.639,0.155
+L048,Osu Rider Station,Osu,RIDER_STATION,5.555,0.182
+L049,Airport Rider Station,Airport,RIDER_STATION,5.605,0.171
+L050,Ridge Rider Station,Ridge,RIDER_STATION,5.561,0.197
+L051,Haatso Rider Station,Haatso,RIDER_STATION,5.668,0.205
+L052,Atomic Rider Station,Atomic,RIDER_STATION,5.665,0.220
