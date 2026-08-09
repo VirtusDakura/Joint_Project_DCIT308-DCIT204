@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import org.ug.dsa.datastructures.CustomDynamicArray;
@@ -264,7 +263,7 @@ public class DatabaseManager {
     /**
      * Insert a service request into the database
      */
-    public static void insertServiceRequest(String requestId, String source, String destination, String category, int urgency, LocalDateTime timeSubmitted, LocalDateTime deadline, String status) throws SQLException {
+    public static void insertServiceRequest(String requestId, String source, String destination, String category, int urgency, String timeSubmitted, String deadline, String status) throws SQLException {
         String sql = "INSERT OR IGNORE INTO service_requests (requestId, source, destination, category, urgency, timeSubmitted, deadline, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = getConnection().prepareStatement(sql);
         pstmt.setString(1, requestId);
@@ -272,8 +271,8 @@ public class DatabaseManager {
         pstmt.setString(3, destination);
         pstmt.setString(4, category);
         pstmt.setInt(5, urgency);
-        pstmt.setString(6, timeSubmitted.toString());
-        pstmt.setString(7, deadline.toString());
+        pstmt.setString(6, timeSubmitted);
+        pstmt.setString(7, deadline);
         pstmt.setString(8, status);
         pstmt.executeUpdate();
         pstmt.close();
@@ -375,7 +374,9 @@ public class DatabaseManager {
         pstmt.setString(1, eventId);
         pstmt.setString(2, eventType);
         pstmt.setString(3, description);
-        pstmt.setString(4, timestamp != null ? timestamp : Instant.now().toString());
+        // Use current timestamp if not provided
+        String ts = timestamp != null ? timestamp : String.valueOf(System.currentTimeMillis());
+        pstmt.setString(4, ts);
         pstmt.executeUpdate();
         pstmt.close();
     }
@@ -421,10 +422,8 @@ public class DatabaseManager {
                         break;
                     case "service_requests":
                         if (values.length >= 8) {
-                            LocalDateTime submitted = LocalDateTime.parse(values[5]);
-                            LocalDateTime deadline = LocalDateTime.parse(values[6]);
                             insertServiceRequest(values[0], values[1], values[2], values[3],
-                                    Integer.parseInt(values[4]), submitted, deadline, values[7]);
+                                    Integer.parseInt(values[4]), values[5], values[6], values[7]);
                             importedCount++;
                         }
                         break;
