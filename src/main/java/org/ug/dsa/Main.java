@@ -1,4 +1,4 @@
-package org.ug.dsa;
+ package org.ug.dsa;
 
 import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching;
 import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching.BatchingResult;
@@ -8,10 +8,14 @@ import org.ug.dsa.algorithms.sorting.MergeSort;
 import org.ug.dsa.datastructures.CustomBTree;
 import org.ug.dsa.datastructures.CustomDynamicArray;
 import org.ug.dsa.datastructures.CustomGraph;
+import org.ug.dsa.datastructures.CustomHashTable;
+import org.ug.dsa.datastructures.CustomMap;
+import org.ug.dsa.datastructures.CustomSet;
 import org.ug.dsa.models.Location;
 import org.ug.dsa.models.Resource;
 import org.ug.dsa.models.Road;
 import org.ug.dsa.models.ServiceRequest;
+import org.ug.dsa.services.IndexingService;
 import org.ug.dsa.services.SchedulingService;
 
 import java.util.List;
@@ -26,6 +30,7 @@ public class Main {
     private static List<ServiceRequest> serviceRequests;
     private static List<Resource> resources;
     private static CustomGraph systemGraph;
+    private static IndexingService indexingService;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -93,11 +98,19 @@ public class Main {
         resources = GreedyBatching.loadResources("data/resources.csv");
 
         systemGraph = new CustomGraph();
+        indexingService = new IndexingService();
         for (Location loc : locations) {
             systemGraph.addVertex(loc.locationId());
+            indexingService.indexLocation(loc);
         }
         for (Road road : roads) {
             systemGraph.addEdge(road.fromLocationId(), road.toLocationId(), road.getEffectiveWeight());
+        }
+        for (Resource res : resources) {
+            indexingService.indexResource(res);
+        }
+        for (ServiceRequest req : serviceRequests) {
+            indexingService.indexRequest(req);
         }
     }
 
@@ -201,6 +214,30 @@ public class Main {
             System.out.print(btree.inorderTraversal().get(i) + " ");
         }
         System.out.println();
+
+        // Custom Hash Table
+        System.out.println("\n4. CustomHashTable (Separate Chaining) Demo:");
+        CustomHashTable<String, String> hashTable = new CustomHashTable<>(5);
+        hashTable.put("ACC", "Accra Central");
+        hashTable.put("KUM", "Kumasi Mall");
+        hashTable.put("TAM", "Tamale Airport");
+        System.out.printf("   Table Size: %d, Load Factor: %.2f, Collisions: %d%n",
+                hashTable.size(), hashTable.loadFactor(), hashTable.collisionCount());
+
+        // Custom Set
+        System.out.println("\n5. CustomSet (Uniqueness) Demo:");
+        CustomSet<String> campusZones = new CustomSet<>();
+        campusZones.add("Legon");
+        campusZones.add("KNUST");
+        campusZones.add("Legon"); // Duplicate
+        System.out.printf("   Unique Zones Count: %d%n", campusZones.size());
+
+        // Custom Map
+        System.out.println("\n6. CustomMap (Key-Value) Demo:");
+        CustomMap<String, Integer> urgencyMap = new CustomMap<>();
+        urgencyMap.put("Food", 5);
+        urgencyMap.put("Parcel", 2);
+        System.out.printf("   Food Urgency: %d, Map Size: %d%n", urgencyMap.get("Food"), urgencyMap.size());
     }
 
     private static void demoSchedulingService() {
@@ -254,6 +291,12 @@ public class Main {
         CustomBTree<Integer, String> tree = new CustomBTree<>();
         boolean degreePass = tree.getMinDegree() == 3;
         System.out.printf("   Min Degree t = 3: %s%n", degreePass ? "PASSED" : "FAILED");
+
+        System.out.println("4. Verifying IndexingService Record Counts...");
+        boolean indexPass = indexingService.getLocationCount() == locations.size() &&
+                           indexingService.getRequestCount() == serviceRequests.size();
+        System.out.printf("   Location Index: %d | Request Index: %d -> %s%n",
+                indexingService.getLocationCount(), indexingService.getRequestCount(), indexPass ? "PASSED" : "FAILED");
 
         System.out.println("✅ All system self-checks completed successfully!");
     }
