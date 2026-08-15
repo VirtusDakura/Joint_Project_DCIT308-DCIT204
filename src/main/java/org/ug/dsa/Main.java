@@ -5,11 +5,15 @@ import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching.BatchingRes
 import org.ug.dsa.algorithms.optimization.GreedyBatching;
 import org.ug.dsa.algorithms.sorting.InsertionSort;
 import org.ug.dsa.algorithms.sorting.MergeSort;
+import org.ug.dsa.datastructures.CustomBST;
 import org.ug.dsa.datastructures.CustomBTree;
 import org.ug.dsa.datastructures.CustomDynamicArray;
 import org.ug.dsa.datastructures.CustomGraph;
 import org.ug.dsa.datastructures.CustomHashTable;
+import org.ug.dsa.datastructures.CustomHeap;
+import org.ug.dsa.datastructures.CustomLinkedList;
 import org.ug.dsa.datastructures.CustomMap;
+import org.ug.dsa.datastructures.CustomRedBlackTree;
 import org.ug.dsa.datastructures.CustomSet;
 import org.ug.dsa.models.Location;
 import org.ug.dsa.models.Resource;
@@ -17,6 +21,7 @@ import org.ug.dsa.models.Road;
 import org.ug.dsa.models.ServiceRequest;
 import org.ug.dsa.services.IndexingService;
 import org.ug.dsa.services.SchedulingService;
+import org.ug.dsa.util.IndexParameters;
 
 import java.util.Scanner;
 
@@ -194,7 +199,7 @@ public class Main {
     private static void demoDataStructures() {
         System.out.println("=== CUSTOM DATA STRUCTURES DEMO ===");
 
-        // Dynamic Array
+        // 1. Dynamic Array
         System.out.println("1. CustomDynamicArray Auto-Resizing Demo:");
         CustomDynamicArray<String> dynamicArray = new CustomDynamicArray<>();
         System.out.printf("   Initial Capacity: %d, Size: %d%n", dynamicArray.capacity(), dynamicArray.size());
@@ -203,12 +208,20 @@ public class Main {
         }
         System.out.printf("   After 5 elements -> Capacity: %d, Size: %d%n", dynamicArray.capacity(), dynamicArray.size());
 
-        // Custom Graph
-        System.out.println("\n2. CustomGraph Adjacency List & Matrix Representation:");
+        // 2. Custom Linked List
+        System.out.println("\n2. CustomLinkedList (Doubly-Linked) Demo:");
+        CustomLinkedList<String> linkedList = new CustomLinkedList<>();
+        linkedList.addFirst("Station-B");
+        linkedList.addFirst("Station-A");
+        linkedList.addLast("Station-C");
+        System.out.printf("   Size: %d, First: %s, Last: %s%n", linkedList.size(), linkedList.peekFirst(), linkedList.peekLast());
+
+        // 3. Custom Graph
+        System.out.println("\n3. CustomGraph Adjacency List & Matrix Representation:");
         System.out.println(systemGraph.getAdjacencyListAndMatrixSideBySide());
 
-        // Custom B-Tree
-        System.out.println("3. CustomBTree Indexing & Node Splitting (t = 3):");
+        // 4. Custom B-Tree
+        System.out.println("4. CustomBTree Indexing & Node Splitting (t = 3):");
         CustomBTree<Integer, String> btree = new CustomBTree<>();
         for (int i = 1; i <= 10; i++) {
             btree.insert(i, "OrderRecord-" + i);
@@ -220,8 +233,31 @@ public class Main {
         }
         System.out.println();
 
-        // Custom Hash Table
-        System.out.println("\n4. CustomHashTable (Separate Chaining) Demo:");
+        // 5. Custom BST & Red-Black Tree
+        System.out.println("\n5. CustomBST vs CustomRedBlackTree Self-Balancing Comparison:");
+        CustomBST<Integer, String> bst = new CustomBST<>();
+        CustomRedBlackTree<Integer, String> rbTree = new CustomRedBlackTree<>();
+        for (int i = 1; i <= 15; i++) {
+            bst.insert(i, "Item-" + i);
+            rbTree.insert(i, "Item-" + i);
+        }
+        System.out.printf("   Inserted 15 sequential keys (1..15)%n");
+        System.out.printf("   * Plain BST Height (Degenerate): %d%n", bst.height());
+        System.out.printf("   * Red-Black Tree Height (Balanced): %d (Black Height: %d)%n", rbTree.height(), rbTree.blackHeight());
+
+        // 6. Custom Heap (Min-Heap Priority Queue)
+        System.out.println("\n6. CustomHeap (Min-Heap Priority Queue) Demo:");
+        CustomHeap<Integer> heap = new CustomHeap<>();
+        heap.insert(45); heap.insert(12); heap.insert(89); heap.insert(5); heap.insert(23);
+        System.out.printf("   Heap Size: %d, Peek Min (Highest Priority): %d%n", heap.size(), heap.peekMin());
+        System.out.print("   Sequential Extractions: ");
+        while (!heap.isEmpty()) {
+            System.out.print(heap.extractMin() + " ");
+        }
+        System.out.println();
+
+        // 7. Custom Hash Table
+        System.out.println("\n7. CustomHashTable (Separate Chaining) Demo:");
         CustomHashTable<String, String> hashTable = new CustomHashTable<>(5);
         hashTable.put("ACC", "Accra Central");
         hashTable.put("KUM", "Kumasi Mall");
@@ -229,20 +265,13 @@ public class Main {
         System.out.printf("   Table Size: %d, Load Factor: %.2f, Collisions: %d%n",
                 hashTable.size(), hashTable.loadFactor(), hashTable.collisionCount());
 
-        // Custom Set
-        System.out.println("\n5. CustomSet (Uniqueness) Demo:");
+        // 8. Custom Set & Map
+        System.out.println("\n8. CustomSet & CustomMap Demo:");
         CustomSet<String> campusZones = new CustomSet<>();
-        campusZones.add("Legon");
-        campusZones.add("KNUST");
-        campusZones.add("Legon"); // Duplicate
-        System.out.printf("   Unique Zones Count: %d%n", campusZones.size());
-
-        // Custom Map
-        System.out.println("\n6. CustomMap (Key-Value) Demo:");
+        campusZones.add("Legon"); campusZones.add("KNUST"); campusZones.add("Legon");
         CustomMap<String, Integer> urgencyMap = new CustomMap<>();
-        urgencyMap.put("Food", 5);
-        urgencyMap.put("Parcel", 2);
-        System.out.printf("   Food Urgency: %d, Map Size: %d%n", urgencyMap.get("Food"), urgencyMap.size());
+        urgencyMap.put("Food", 5); urgencyMap.put("Parcel", 2);
+        System.out.printf("   Unique Zones: %d | Map Food Urgency: %d%n", campusZones.size(), urgencyMap.get("Food"));
     }
 
     private static void demoSchedulingService() {

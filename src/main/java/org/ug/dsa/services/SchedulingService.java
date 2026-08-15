@@ -2,6 +2,7 @@ package org.ug.dsa.services;
 
 import org.ug.dsa.datastructures.CustomDeque;
 import org.ug.dsa.datastructures.CustomDynamicArray;
+import org.ug.dsa.datastructures.CustomHeap;
 import org.ug.dsa.models.ServiceRequest;
 
 /**
@@ -65,14 +66,7 @@ public class SchedulingService {
     }
 
     /**
-     * Dispatches the highest urgency order regardless of submission time.
-     *
-     * Drains the deque to locate the highest-priority order (lowest compareTo
-     * value = highest urgency, then earliest deadline), removes it, and
-     * re-enqueues all remaining orders in their original relative order.
-     *
-     * Time complexity: O(n) — will be replaced with O(log n) CustomHeap
-     * extraction once Issue #2.1 (CustomHeap) is implemented.
+     * Dispatches the highest urgency order using CustomHeap priority extraction.
      *
      * @return the highest-urgency order, or null if no orders are pending
      */
@@ -81,25 +75,23 @@ public class SchedulingService {
             return null;
         }
 
-        // Drain all orders into a temporary array for random-access scanning
-        CustomDynamicArray<ServiceRequest> temp = new CustomDynamicArray<>();
+        // Drain all orders into a CustomHeap for priority extraction
+        CustomHeap<ServiceRequest> priorityHeap = new CustomHeap<>();
+        CustomDynamicArray<ServiceRequest> remaining = new CustomDynamicArray<>();
+
         while (!orderDeque.isEmpty()) {
-            temp.add(orderDeque.removeFront());
+            priorityHeap.insert(orderDeque.removeFront());
         }
 
-        // Find highest priority (lowest compareTo = highest urgency + earliest deadline)
-        int bestIdx = 0;
-        for (int i = 1; i < temp.size(); i++) {
-            if (temp.get(i).compareTo(temp.get(bestIdx)) < 0) {
-                bestIdx = i;
-            }
+        ServiceRequest best = priorityHeap.extractMin();
+
+        // Drain remaining from heap and restore to deque
+        while (!priorityHeap.isEmpty()) {
+            remaining.add(priorityHeap.extractMin());
         }
 
-        ServiceRequest best = temp.remove(bestIdx);
-
-        // Re-enqueue remaining orders, preserving their relative order
-        for (int i = 0; i < temp.size(); i++) {
-            orderDeque.addRear(temp.get(i));
+        for (int i = 0; i < remaining.size(); i++) {
+            orderDeque.addRear(remaining.get(i));
         }
 
         return best;
