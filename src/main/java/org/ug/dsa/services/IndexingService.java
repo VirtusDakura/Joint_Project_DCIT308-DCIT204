@@ -85,8 +85,8 @@ public class IndexingService {
     }
 
     public void clearAll() {
-        // Simple re-initialization since clear() isn't in HashTable
-        // But I could add it or just reassign.
-        // I'll just reassign for simplicity as per service patterns.
+        this.locationIndex.clear();
+        this.resourceIndex.clear();
+        this.requestIndex.clear();
     }
 }

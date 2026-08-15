@@ -1,26 +1,8 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom Double-Ended Queue (Deque) for emergency order insertions.
+ * Custom generic Double-Ended Queue (Deque) for emergency order insertions.
  * Supports adding and removing from both ends.
- *
- * Assigned to: Rushdan Delimwine Antiku (22102540)
- *
- * Required operations:
- *   - addFront(T element) : Add to the front
- *   - addRear(T element)  : Add to the rear
- *   - removeFront()       : Remove and return from the front
- *   - removeRear()        : Remove and return from the rear
- *   - peekFront()         : View front element without removing
- *   - peekRear()          : View rear element without removing
- *   - isEmpty()
- *   - size()
- *
- * Use Case: Emergency orders can be inserted at the front of the dispatch queue
- *
- * Evidence to produce:
- *   - Trace showing front/rear operations with priority insertion
- *   - Unit tests for addFront/removeFront, addRear/removeRear, and mixed operations
  */
 public class CustomDeque<T> {
 

@@ -1,23 +1,7 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom Hash Table using separate chaining for collision handling.
- *
- * Assigned to: Collins Edumadze Egyir (22233318)
- *
- * Required operations:
- *   - put(K key, V value)     : Insert or update a key-value pair
- *   - get(K key)              : Return value or null
- *   - remove(K key)           : Remove and return value
- *   - containsKey(K key)
- *   - size()
- *   - loadFactor()            : Current size / table capacity
- *   - collisionCount()        : Total collisions across all buckets
- *   - keys()                  : Return all keys
- *
- * Evidence to produce:
- *   - Collision statistics experiment for load factors at 100 to 20,000 keys
- *   - Unit tests for put/get/remove, duplicate key update, key not found, empty table
+ * Custom generic Hash Table using separate chaining for collision handling.
  */
 public class CustomHashTable<K, V> {
 
@@ -53,7 +37,7 @@ public class CustomHashTable<K, V> {
 
     private int hash(K key) {
         if (key == null) return 0;
-        return Math.abs(key.hashCode() % capacity);
+        return (key.hashCode() & 0x7fffffff) % capacity;
     }
 
     public void put(K key, V value) {
@@ -155,20 +139,32 @@ public class CustomHashTable<K, V> {
 
     @SuppressWarnings("unchecked")
     private void resize() {
-        int oldCapacity = capacity;
-        int newCapacity = oldCapacity * 2;
-        Entry<K, V>[] oldTable = table;
-        table = new Entry[newCapacity];
-        capacity = newCapacity;
-        size = 0;
+        int newCapacity = capacity * 2;
+        Entry<K, V>[] newTable = new Entry[newCapacity];
 
-        for (int i = 0; i < oldCapacity; i++) {
-            Entry<K, V> current = oldTable[i];
+        for (int i = 0; i < capacity; i++) {
+            Entry<K, V> current = table[i];
             while (current != null) {
-                put(current.key, current.value);
-                current = current.next;
+                Entry<K, V> next = current.next;
+                int newIndex = (current.key.hashCode() & 0x7fffffff) % newCapacity;
+                current.next = newTable[newIndex];
+                newTable[newIndex] = current;
+                current = next;
             }
         }
+
+        this.table = newTable;
+        this.capacity = newCapacity;
+    }
+
+    /**
+     * Removes all entries from the hash table, resetting to initial capacity.
+     */
+    @SuppressWarnings("unchecked")
+    public void clear() {
+        this.table = new Entry[INITIAL_CAPACITY];
+        this.capacity = INITIAL_CAPACITY;
+        this.size = 0;
     }
 
 }

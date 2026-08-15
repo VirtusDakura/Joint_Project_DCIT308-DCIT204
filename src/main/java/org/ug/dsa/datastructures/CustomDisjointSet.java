@@ -3,20 +3,6 @@ package org.ug.dsa.datastructures;
 /**
  * Custom Disjoint Set (Union-Find) with path compression and union by rank.
  * Used by Kruskal's MST algorithm to detect cycles during edge selection.
- *
- * Assigned to: Seglah Emmanuel
- *
- * Required operations:
- *   - makeSet(int x)
- *   - find(int x)             : With path compression
- *   - union(int x, int y)     : By rank or size
- *   - connected(int x, int y) : Check if two elements are in the same set
- *   - getComponentCount()     : Number of disjoint sets remaining
- *
- * Evidence to produce:
- *   - Kruskal connectivity trace showing union/find calls as edges are processed
- *   - Demonstrate path compression flattening the tree
- *   - Unit tests for single element set, union of two sets, connected components count
  */
 public class CustomDisjointSet {
 
@@ -44,6 +30,11 @@ public class CustomDisjointSet {
      */
     public void makeSet(int x) {
         validate(x);
+        for (int i = 0; i < parent.length; i++) {
+            if (i != x && parent[i] == x) {
+                parent[i] = i;
+            }
+        }
         parent[x] = x;
         rank[x] = 0;
     }

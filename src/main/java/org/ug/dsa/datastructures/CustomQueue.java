@@ -1,25 +1,11 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom FIFO Queue for first-come-first-served service request dispatch.
- *
- * Assigned to: Rushdan Delimwine Antiku (22102540)
- *
- * Required operations:
- *   - enqueue(T element)  : Add to the rear
- *   - dequeue()           : Remove and return from the front
- *   - peek()              : View front element without removing
- *   - isEmpty()
- *   - isFull()            : If using array-backed implementation
- *   - size()
- *
- * Evidence to produce:
- *   - Trace showing front/rear pointer movement after each enqueue/dequeue
- *   - Unit tests for enqueue until full, dequeue until empty, enqueue on full queue
+ * Custom generic FIFO Queue implementation for first-come-first-served
+ * service request dispatch.
  */
 public class CustomQueue<T> {
 
-    private static final int DEFAULT_CAPACITY = 100;
     private Node<T> front;
     private Node<T> rear;
     private int size;
