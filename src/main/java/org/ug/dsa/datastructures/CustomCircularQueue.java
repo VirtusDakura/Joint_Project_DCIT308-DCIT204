@@ -1,23 +1,8 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom Circular Queue with wrap-around index handling.
+ * Custom generic Circular Queue with wrap-around index handling.
  * Uses a fixed-size array with front and rear pointers that wrap around.
- *
- * Assigned to: Rushdan Delimwine Antiku (22102540)
- *
- * Required operations:
- *   - enqueue(T element)  : Add to the rear with wrap-around
- *   - dequeue()           : Remove and return from the front with wrap-around
- *   - peek()              : View front element without removing
- *   - isEmpty()
- *   - isFull()            : Check if queue is at capacity
- *   - size()
- *   - capacity()
- *
- * Evidence to produce:
- *   - Trace showing front/rear pointer wrap-around during enqueue/dequeue
- *   - Unit tests for wrap-around scenario, full queue behavior
  */
 public class CustomCircularQueue<T> {
 

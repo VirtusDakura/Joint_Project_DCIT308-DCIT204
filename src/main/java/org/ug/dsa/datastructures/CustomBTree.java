@@ -3,29 +3,14 @@ package org.ug.dsa.datastructures;
 
 
 /**
- * Custom B-Tree for database index simulation.
+ * Custom B-Tree implementation for database index simulation.
  *
- * Assigned to: Jessica Zunuo Puozaa (22120404)
- *
- * Minimum degree (t) derived from index number: 22120404 % 3 = 0, so t = 3 + 0 = 3.
- * This means every node (except the root) holds between (t-1)=2 and (2t-1)=5 keys,
- * and has between t=3 and 2t=6 children.
- *
- * Required operations:
- *   - insert(K key, V value)  : Insert with node splitting on overflow
- *   - search(K key)
- *   - inorderTraversal()      : Sorted key output
- *   - height()
- *
- * Evidence to produce:
- *   - Search path trace
- *   - Sorted inorder output
- *   - Before/after node-splitting diagrams
- *   - Unit tests verifying splitting, search, and sorted traversal
+ * Minimum degree (t = 3): Every non-root node holds between (t-1)=2 and
+ * (2t-1)=5 keys, and has between t=3 and 2t=6 children.
  */
 public class CustomBTree<K extends Comparable<K>, V> {
 
-    private static final int MIN_DEGREE = 3; // t, derived from index number 22120404
+    private static final int MIN_DEGREE = 3;
     private static final int MAX_KEYS = 2 * MIN_DEGREE - 1; // 5
     private static final int MAX_CHILDREN = 2 * MIN_DEGREE; // 6
 

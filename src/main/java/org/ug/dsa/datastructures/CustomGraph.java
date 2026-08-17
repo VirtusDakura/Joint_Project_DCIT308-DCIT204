@@ -209,9 +209,9 @@ public class CustomGraph {
             newMatrix[i][i] = 0.0;
         }
 
-        int oldSize = vertices.size();
-        for (int i = 0; i < oldSize; i++) {
-            System.arraycopy(adjMatrix[i], 0, newMatrix[i], 0, oldSize);
+        int oldCapacity = this.matrixCapacity;
+        for (int i = 0; i < oldCapacity; i++) {
+            System.arraycopy(adjMatrix[i], 0, newMatrix[i], 0, oldCapacity);
         }
 
         this.adjMatrix = newMatrix;
