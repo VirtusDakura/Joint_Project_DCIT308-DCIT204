@@ -1,16 +1,7 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom generic Red-Black Tree (Self-Balancing Binary Search Tree).
- *
- * Implements Module M3 balanced tree specifications:
- *   - Guarantees O(log n) worst-case search, insertion, and lookup
- *   - Maintains Red-Black invariants:
- *       1. Every node is either RED or BLACK.
- *       2. The root is always BLACK.
- *       3. Red nodes cannot have red children (no two consecutive red nodes).
- *       4. Every path from root to null contains the same number of black nodes (black-height).
- *   - Insertion with self-balancing rotations (left/right) and recoloring
+ * Custom generic Red-Black Tree implementation with self-balancing rotations.
  */
 public class CustomRedBlackTree<K extends Comparable<K>, V> {
 

@@ -1,7 +1,7 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom generic list interface representing linear custom data structures (Module M3).
+ * Generic list interface for custom linear collections.
  */
 public interface CustomList<T> extends Iterable<T> {
     void add(T element);

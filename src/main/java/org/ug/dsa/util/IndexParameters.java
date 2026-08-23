@@ -1,11 +1,7 @@
 package org.ug.dsa.util;
 
 /**
- * Utility class to derive algorithm parameters from team member index numbers.
- *
- * Conforms to Section 2.iii of the DCIT 204/308 project specification:
- * "Each team must derive at least three algorithm parameters from member index numbers,
- * for example priority weight, route penalty, hash-table size, random seed or budget constraint."
+ * Derives operational algorithm parameters from team student index numbers.
  */
 public final class IndexParameters {
 

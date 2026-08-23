@@ -4,14 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Custom generic Doubly Linked List with custom bidirectional Iterator.
- *
- * Implements Module M3 custom data structure specifications:
- *   - addFirst, addLast, insertAfter, removeFirst, removeLast, remove(element)
- *   - get(index), set(index, element), size, isEmpty, clear
- *   - Custom Iterator implementation for for-each traversal
- *
- * All operations manage node pointers explicitly without Java collection utilities.
+ * Generic Doubly Linked List implementation with custom Iterator.
  */
 public class CustomLinkedList<T> implements CustomList<T> {
 

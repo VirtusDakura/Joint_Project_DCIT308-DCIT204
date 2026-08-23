@@ -29,17 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
- * Handles recording algorithm runtime metrics, running empirical benchmarks, and exporting data.
- *
- * Implements Module M10 (Empirical Efficiency Lab) specifications:
- *   - logAlgorithmRun : Records execution time (ns) and memory usage (KB) into the database
- *   - exportRunsToCSV : Exports recorded metrics to CSV for Excel / plotting
- *   - runSearchBenchmark : Linear vs Binary Search
- *   - runSortingBenchmark : Selection vs Insertion vs Merge vs QuickSort
- *   - runHashTableBenchmark : Load factor vs collisions
- *   - runTreeBenchmark : BST vs Red-Black Tree height and search
- *   - runHeapBenchmark : Heap priority dispatch
- *   - runGraphBenchmark : BFS, DFS, Dijkstra, Prim, Kruskal
+ * Handles recording algorithm runtime metrics, running benchmarks, and exporting data.
  */
 public class ReportingService {
 
