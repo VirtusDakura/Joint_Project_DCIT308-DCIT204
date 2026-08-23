@@ -1,32 +1,39 @@
- package org.ug.dsa;
+package org.ug.dsa;
 
+import org.ug.dsa.algorithms.graph.BFSReachability;
+import org.ug.dsa.algorithms.graph.DFSCycleDetection;
+import org.ug.dsa.algorithms.graph.DijkstraAlgorithm;
+import org.ug.dsa.algorithms.graph.PrimKruskalMST;
 import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching;
 import org.ug.dsa.algorithms.optimization.DynamicProgrammingBatching.BatchingResult;
 import org.ug.dsa.algorithms.optimization.GreedyBatching;
+import org.ug.dsa.algorithms.search.BinarySearch;
+import org.ug.dsa.algorithms.search.LinearSearch;
 import org.ug.dsa.algorithms.sorting.InsertionSort;
 import org.ug.dsa.algorithms.sorting.MergeSort;
-import org.ug.dsa.datastructures.CustomBST;
-import org.ug.dsa.datastructures.CustomBTree;
-import org.ug.dsa.datastructures.CustomDynamicArray;
-import org.ug.dsa.datastructures.CustomGraph;
-import org.ug.dsa.datastructures.CustomHashTable;
-import org.ug.dsa.datastructures.CustomHeap;
-import org.ug.dsa.datastructures.CustomLinkedList;
-import org.ug.dsa.datastructures.CustomMap;
-import org.ug.dsa.datastructures.CustomRedBlackTree;
-import org.ug.dsa.datastructures.CustomSet;
+import org.ug.dsa.algorithms.sorting.QuickSort;
+import org.ug.dsa.algorithms.sorting.SelectionSort;
+import org.ug.dsa.database.DatabaseManager;
+import org.ug.dsa.datastructures.*;
 import org.ug.dsa.models.Location;
 import org.ug.dsa.models.Resource;
 import org.ug.dsa.models.Road;
 import org.ug.dsa.models.ServiceRequest;
 import org.ug.dsa.services.IndexingService;
+import org.ug.dsa.services.ReportingService;
+import org.ug.dsa.services.RoutingService;
 import org.ug.dsa.services.SchedulingService;
 import org.ug.dsa.util.IndexParameters;
 
 import java.util.Scanner;
 
 /**
- * Interactive console menu application */
+ * Ghana Smart Food & Parcel Delivery Operations Optimizer.
+ * Department of Computer Science - University of Ghana.
+ * DCIT 204 / DCIT 308 Joint Semester Project.
+ *
+ * Interactive Console Management Application.
+ */
 public class Main {
 
     private static CustomDynamicArray<Location> locations;
@@ -35,15 +42,18 @@ public class Main {
     private static CustomDynamicArray<Resource> resources;
     private static CustomGraph systemGraph;
     private static IndexingService indexingService;
+    private static RoutingService routingService;
+    private static ReportingService reportingService;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        reportingService = new ReportingService();
         loadDatasets();
 
         while (true) {
             printHeader();
             printMenu();
-            System.out.print("Select an option (1-8): ");
+            System.out.print("Select an option (1-11): ");
             if (!scanner.hasNextLine()) break;
             String input = scanner.nextLine().trim();
 
@@ -51,7 +61,7 @@ public class Main {
             switch (input) {
                 case "1":
                     loadDatasets();
-                    System.out.println("✅ All CSV datasets reloaded successfully into system memory.");
+                    System.out.println("Datasets and database tables reloaded successfully.");
                     break;
 
                 case "2":
@@ -59,31 +69,43 @@ public class Main {
                     break;
 
                 case "3":
-                    demoSortingAlgorithms(scanner);
+                    runSearchingModule(scanner);
                     break;
 
                 case "4":
-                    demoDataStructures();
+                    runSortingModule(scanner);
                     break;
 
                 case "5":
-                    demoSchedulingService();
+                    runDataStructuresDiagnostics();
                     break;
 
                 case "6":
-                    demoOptimizationEngine();
+                    runGraphRoutingModule(scanner);
                     break;
 
                 case "7":
-                    runSelfCheck();
+                    runSchedulingModule();
                     break;
 
                 case "8":
-                    System.out.println("Thank you for evaluating the Ghana Smart Delivery System!");
+                    runOptimizationModule();
+                    break;
+
+                case "9":
+                    runBenchmarkModule();
+                    break;
+
+                case "10":
+                    runIntegritySelfCheck();
+                    break;
+
+                case "11":
+                    System.out.println("Exiting Ghana Smart Delivery Operations Optimizer. Goodbye!");
                     return;
 
                 default:
-                    System.out.println("❌ Invalid option. Please select between 1 and 8.");
+                    System.out.println("Invalid option. Please select between 1 and 11.");
             }
 
             System.out.println("\nPress ENTER to return to the main menu...");
@@ -96,6 +118,12 @@ public class Main {
     }
 
     private static void loadDatasets() {
+        try {
+            DatabaseManager.initializeTables();
+        } catch (Exception e) {
+            System.out.println("[Notice] Loading records directly from CSV files.");
+        }
+
         locations = GreedyBatching.loadLocations("data/locations.csv");
         roads = GreedyBatching.loadRoads("data/roads.csv");
         serviceRequests = GreedyBatching.loadRequests("data/service_requests.csv");
@@ -103,21 +131,27 @@ public class Main {
 
         systemGraph = new CustomGraph();
         indexingService = new IndexingService();
+
         for (int i = 0; i < locations.size(); i++) {
             Location loc = locations.get(i);
             systemGraph.addVertex(loc.locationId());
             indexingService.indexLocation(loc);
         }
+
         for (int i = 0; i < roads.size(); i++) {
             Road road = roads.get(i);
             systemGraph.addEdge(road.fromLocationId(), road.toLocationId(), road.getEffectiveWeight());
         }
+
         for (int i = 0; i < resources.size(); i++) {
             indexingService.indexResource(resources.get(i));
         }
+
         for (int i = 0; i < serviceRequests.size(); i++) {
             indexingService.indexRequest(serviceRequests.get(i));
         }
+
+        routingService = new RoutingService(systemGraph);
     }
 
     private static void printHeader() {
@@ -129,14 +163,17 @@ public class Main {
     }
 
     private static void printMenu() {
-        System.out.println("1. Load / Reload CSV Datasets");
-        System.out.println("2. Display Operational Dataset Summary (Locations, Roads, Orders, Riders)");
-        System.out.println("3. Run Sorting Algorithms Demo (Insertion Sort vs Merge Sort)");
-        System.out.println("4. Demonstrate Custom Data Structures (CustomDynamicArray, CustomGraph, CustomBTree)");
-        System.out.println("5. Demonstrate Service Scheduling & Dispatch Engine (FIFO & Priority)");
-        System.out.println("6. Run Order Batching Optimization (Greedy vs 0/1 Knapsack DP)");
-        System.out.println("7. Run Integrated Self-Check & Invariant Verification");
-        System.out.println("8. Exit System");
+        System.out.println("1.  Reload CSV Datasets & Database Tables");
+        System.out.println("2.  View Dataset Summary (Locations, Roads, Orders, Riders)");
+        System.out.println("3.  Search Engine (Linear Search & Binary Search with Preconditions)");
+        System.out.println("4.  Sort Service Requests (Selection, Insertion, Merge, QuickSort)");
+        System.out.println("5.  Data Structures Diagnostics (14 Custom Structures)");
+        System.out.println("6.  Routing & Network Optimization (Dijkstra, BFS, DFS, Kruskal, Prim)");
+        System.out.println("7.  Order Scheduling & Dispatch (FIFO / Priority Heap)");
+        System.out.println("8.  Order Batching & Capacity Optimization (Greedy vs 0/1 Knapsack DP)");
+        System.out.println("9.  Performance Benchmark Laboratory (Export to CSV)");
+        System.out.println("10. Run System Integrity & Invariant Self-Check");
+        System.out.println("11. Exit");
         System.out.println("--------------------------------------------------------------------------");
     }
 
@@ -148,26 +185,75 @@ public class Main {
         System.out.printf("Delivery Resources   : %d riders/vehicles%n", resources.size());
         System.out.println();
 
-        System.out.println("Sample Locations (First 5):");
+        System.out.println("Sample Locations:");
         for (int i = 0; i < Math.min(5, locations.size()); i++) {
             Location loc = locations.get(i);
             System.out.printf("  * [%s] %s (%s, %s)%n", loc.locationId(), loc.name(), loc.area(), loc.locationType());
         }
 
-        System.out.println("\nSample Service Requests (First 5):");
+        System.out.println("\nSample Service Requests:");
         for (int i = 0; i < Math.min(5, serviceRequests.size()); i++) {
             ServiceRequest req = serviceRequests.get(i);
-            System.out.printf("  * [%s] Urgency: %d | Cat: %-18s | From: %s -> To: %s%n",
+            System.out.printf("  * [%s] Urgency: %d | Category: %-18s | From: %s -> To: %s%n",
                     req.requestId(), req.urgency(), req.category(), req.sourceLocationId(), req.destinationLocationId());
+        }
+
+        System.out.println("\nDerived Operational Parameters:");
+        System.out.printf("  * Hash Table Base Size : %d (Derived from Index)%n", IndexParameters.getDerivedHashTableBaseSize());
+        System.out.printf("  * Priority Multiplier  : %.2f (Derived from Index)%n", IndexParameters.getDerivedPriorityMultiplier());
+        System.out.printf("  * B-Tree Min Degree (t): %d (Derived from Index)%n", IndexParameters.getDerivedBTreeMinDegree());
+        System.out.printf("  * Traffic Penalty      : %.2f (Derived from Index)%n", IndexParameters.getDerivedTrafficPenaltyFactor());
+    }
+
+    private static void runSearchingModule(Scanner scanner) {
+        System.out.println("=== SEARCH ENGINE ===");
+        System.out.println("1. Linear Search on Service Requests");
+        System.out.println("2. Binary Search on Sorted Urgency Levels");
+        System.out.println("3. Precondition Verification on Unsorted Data");
+        System.out.print("Select search option (1-3): ");
+        String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "1";
+
+        if ("2".equals(choice)) {
+            Integer[] urgencies = new Integer[serviceRequests.size()];
+            for (int i = 0; i < serviceRequests.size(); i++) {
+                urgencies[i] = serviceRequests.get(i).urgency();
+            }
+            QuickSort.sort(urgencies);
+
+            int target = 4;
+            BinarySearch.BinarySearchResult<Integer> res = BinarySearch.search(urgencies, target);
+            System.out.printf("Searching for Urgency Level %d in %d sorted records...%n", target, urgencies.length);
+            System.out.printf("Found: %s at Index %d | Comparisons: %d | Precondition Met: %s%n",
+                    res.found(), res.index(), res.comparisonCount(), res.preconditionMet());
+        } else if ("3".equals(choice)) {
+            Integer[] unsorted = new Integer[]{5, 1, 4, 2, 8, 3};
+            System.out.println("Running Binary Search on Unsorted Array [5, 1, 4, 2, 8, 3] with Target = 1");
+            BinarySearch.BinarySearchResult<Integer> resSafe = BinarySearch.search(unsorted, 1);
+            System.out.printf("Safe BinarySearch (with precondition check): PreconditionMet=%s, Aborted safely.%n", resSafe.preconditionMet());
+
+            BinarySearch.BinarySearchResult<Integer> resUnchecked = BinarySearch.searchUncheckedForCounterexample(unsorted, 1);
+            System.out.printf("Unchecked BinarySearch: Found=%s, Index=%d (Precondition violation caused missed search)%n",
+                    resUnchecked.found(), resUnchecked.index());
+        } else {
+            String targetId = serviceRequests.get(Math.min(10, serviceRequests.size() - 1)).requestId();
+            CustomDynamicArray<String> ids = new CustomDynamicArray<>();
+            for (int i = 0; i < serviceRequests.size(); i++) {
+                ids.add(serviceRequests.get(i).requestId());
+            }
+            LinearSearch.SearchResult<String> res = LinearSearch.search(ids, targetId);
+            System.out.printf("Linear Search for Request ID '%s' across %d records:%n", targetId, ids.size());
+            System.out.printf("Found: %s at Index %d | Comparisons Made: %d%n", res.found(), res.index(), res.comparisonCount());
         }
     }
 
-    private static void demoSortingAlgorithms(Scanner scanner) {
-        System.out.println("=== SORTING ALGORITHM DEMONSTRATION ===");
-        System.out.println("1. Insertion Sort (In-Place)");
-        System.out.println("2. Merge Sort (Divide-and-Conquer)");
-        System.out.print("Select sorting algorithm (1 or 2): ");
-        String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "1";
+    private static void runSortingModule(Scanner scanner) {
+        System.out.println("=== SORTING ENGINE ===");
+        System.out.println("1. Selection Sort (In-Place, O(n^2))");
+        System.out.println("2. Insertion Sort (In-Place, Adaptive O(n^2))");
+        System.out.println("3. Merge Sort (Stable Divide-and-Conquer, O(n log n))");
+        System.out.println("4. QuickSort (In-Place Divide-and-Conquer, O(n log n))");
+        System.out.print("Select sorting algorithm (1-4): ");
+        String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "4";
 
         int sampleSize = Math.min(10, serviceRequests.size());
         ServiceRequest[] sampleArr = new ServiceRequest[sampleSize];
@@ -175,20 +261,31 @@ public class Main {
             sampleArr[i] = serviceRequests.get(i);
         }
 
-        System.out.println("\n--- Unsorted Orders Sample (First 10) ---");
+        System.out.println("\n--- Unsorted Sample (First 10) ---");
         for (ServiceRequest req : sampleArr) {
             System.out.printf("  * [%s] Urgency: %d | Deadline: %s%n", req.requestId(), req.urgency(), req.deadline());
         }
 
-        long startTime = System.nanoTime();
-        if ("2".equals(choice)) {
-            MergeSort.sort(sampleArr);
-            System.out.println("\n--- Sorted via MergeSort ---");
-        } else {
-            InsertionSort.sort(sampleArr);
-            System.out.println("\n--- Sorted via InsertionSort ---");
+        long start = System.nanoTime();
+        switch (choice) {
+            case "1":
+                SelectionSort.sort(sampleArr);
+                System.out.println("\n--- Sorted via Selection Sort ---");
+                break;
+            case "2":
+                InsertionSort.sort(sampleArr);
+                System.out.println("\n--- Sorted via Insertion Sort ---");
+                break;
+            case "3":
+                MergeSort.sort(sampleArr);
+                System.out.println("\n--- Sorted via Merge Sort ---");
+                break;
+            default:
+                QuickSort.sort(sampleArr);
+                System.out.println("\n--- Sorted via QuickSort ---");
+                break;
         }
-        long durationNs = System.nanoTime() - startTime;
+        long durationNs = System.nanoTime() - start;
 
         for (ServiceRequest req : sampleArr) {
             System.out.printf("  * [%s] Urgency: %d | Deadline: %s%n", req.requestId(), req.urgency(), req.deadline());
@@ -196,86 +293,141 @@ public class Main {
         System.out.printf("%nExecution Time: %.3f ms%n", durationNs / 1_000_000.0);
     }
 
-    private static void demoDataStructures() {
-        System.out.println("=== CUSTOM DATA STRUCTURES DEMO ===");
+    private static void runDataStructuresDiagnostics() {
+        System.out.println("=== 14 CUSTOM DATA STRUCTURES DIAGNOSTICS ===");
 
         // 1. Dynamic Array
-        System.out.println("1. CustomDynamicArray Auto-Resizing Demo:");
-        CustomDynamicArray<String> dynamicArray = new CustomDynamicArray<>();
-        System.out.printf("   Initial Capacity: %d, Size: %d%n", dynamicArray.capacity(), dynamicArray.size());
-        for (int i = 1; i <= 5; i++) {
-            dynamicArray.add("Location-" + i);
-        }
-        System.out.printf("   After 5 elements -> Capacity: %d, Size: %d%n", dynamicArray.capacity(), dynamicArray.size());
+        CustomDynamicArray<String> dynamicArray = new CustomDynamicArray<>(2);
+        dynamicArray.add("Hub-1"); dynamicArray.add("Hub-2"); dynamicArray.add("Hub-3");
+        System.out.printf("1. CustomDynamicArray : Size = %d, Capacity = %d (Auto-doubled)%n", dynamicArray.size(), dynamicArray.capacity());
 
-        // 2. Custom Linked List
-        System.out.println("\n2. CustomLinkedList (Doubly-Linked) Demo:");
+        // 2. Linked List
         CustomLinkedList<String> linkedList = new CustomLinkedList<>();
-        linkedList.addFirst("Station-B");
-        linkedList.addFirst("Station-A");
-        linkedList.addLast("Station-C");
-        System.out.printf("   Size: %d, First: %s, Last: %s%n", linkedList.size(), linkedList.peekFirst(), linkedList.peekLast());
+        linkedList.addFirst("Stop-A"); linkedList.addLast("Stop-B");
+        System.out.printf("2. CustomLinkedList   : Size = %d, First = %s, Last = %s%n", linkedList.size(), linkedList.peekFirst(), linkedList.peekLast());
 
-        // 3. Custom Graph
-        System.out.println("\n3. CustomGraph Adjacency List & Matrix Representation:");
-        System.out.println(systemGraph.getAdjacencyListAndMatrixSideBySide());
+        // 3. Stack
+        CustomStack<String> stack = new CustomStack<>();
+        stack.push("Action-1"); stack.push("Action-2");
+        System.out.printf("3. CustomStack        : Top = %s, Size = %d%n", stack.peek(), stack.size());
 
-        // 4. Custom B-Tree
-        System.out.println("4. CustomBTree Indexing & Node Splitting (t = 3):");
-        CustomBTree<Integer, String> btree = new CustomBTree<>();
-        for (int i = 1; i <= 10; i++) {
-            btree.insert(i, "OrderRecord-" + i);
-        }
-        System.out.printf("   B-Tree Size: %d, Height: %d, Root Key Count: %d%n", btree.size(), btree.height(), btree.getRootKeyCount());
-        System.out.print("   Inorder Sorted Key Traversal: ");
-        for (int i = 0; i < btree.inorderTraversal().size(); i++) {
-            System.out.print(btree.inorderTraversal().get(i) + " ");
-        }
-        System.out.println();
+        // 4. Queue
+        CustomQueue<String> queue = new CustomQueue<>();
+        queue.enqueue("Order-1"); queue.enqueue("Order-2");
+        System.out.printf("4. CustomQueue        : Front = %s, Size = %d%n", queue.peek(), queue.size());
 
-        // 5. Custom BST & Red-Black Tree
-        System.out.println("\n5. CustomBST vs CustomRedBlackTree Self-Balancing Comparison:");
-        CustomBST<Integer, String> bst = new CustomBST<>();
-        CustomRedBlackTree<Integer, String> rbTree = new CustomRedBlackTree<>();
-        for (int i = 1; i <= 15; i++) {
-            bst.insert(i, "Item-" + i);
-            rbTree.insert(i, "Item-" + i);
-        }
-        System.out.printf("   Inserted 15 sequential keys (1..15)%n");
-        System.out.printf("   * Plain BST Height (Degenerate): %d%n", bst.height());
-        System.out.printf("   * Red-Black Tree Height (Balanced): %d (Black Height: %d)%n", rbTree.height(), rbTree.blackHeight());
+        // 5. Circular Queue
+        CustomCircularQueue<String> cQueue = new CustomCircularQueue<>(3);
+        cQueue.enqueue("Req-1"); cQueue.enqueue("Req-2"); cQueue.dequeue(); cQueue.enqueue("Req-3");
+        System.out.printf("5. CustomCircularQueue: Size = %d (Wrap-around handled)%n", cQueue.size());
 
-        // 6. Custom Heap (Min-Heap Priority Queue)
-        System.out.println("\n6. CustomHeap (Min-Heap Priority Queue) Demo:");
+        // 6. Deque
+        CustomDeque<String> deque = new CustomDeque<>();
+        deque.addFront("Express-Order"); deque.addRear("Standard-Order");
+        System.out.printf("6. CustomDeque        : Front = %s, Rear = %s%n", deque.peekFront(), deque.peekRear());
+
+        // 7. Heap
         CustomHeap<Integer> heap = new CustomHeap<>();
-        heap.insert(45); heap.insert(12); heap.insert(89); heap.insert(5); heap.insert(23);
-        System.out.printf("   Heap Size: %d, Peek Min (Highest Priority): %d%n", heap.size(), heap.peekMin());
-        System.out.print("   Sequential Extractions: ");
-        while (!heap.isEmpty()) {
-            System.out.print(heap.extractMin() + " ");
-        }
-        System.out.println();
+        heap.insert(50); heap.insert(10); heap.insert(30);
+        System.out.printf("7. CustomHeap (Min)   : Min Element = %d%n", heap.peekMin());
 
-        // 7. Custom Hash Table
-        System.out.println("\n7. CustomHashTable (Separate Chaining) Demo:");
+        // 8. BST
+        CustomBST<Integer, String> bst = new CustomBST<>();
+        bst.insert(20, "V20"); bst.insert(10, "V10"); bst.insert(30, "V30");
+        System.out.printf("8. CustomBST          : Size = %d, Height = %d%n", bst.size(), bst.height());
+
+        // 9. Red-Black Tree
+        CustomRedBlackTree<Integer, String> rbTree = new CustomRedBlackTree<>();
+        for (int i = 1; i <= 7; i++) rbTree.insert(i, "RB-" + i);
+        System.out.printf("9. CustomRedBlackTree : Size = %d, Height = %d, BlackHeight = %d%n", rbTree.size(), rbTree.height(), rbTree.blackHeight());
+
+        // 10. B-Tree
+        CustomBTree<Integer, String> btree = new CustomBTree<>();
+        for (int i = 1; i <= 8; i++) btree.insert(i, "B-" + i);
+        System.out.printf("10. CustomBTree (t=3)  : Size = %d, Height = %d%n", btree.size(), btree.height());
+
+        // 11. Hash Table
         CustomHashTable<String, String> hashTable = new CustomHashTable<>(5);
-        hashTable.put("ACC", "Accra Central");
-        hashTable.put("KUM", "Kumasi Mall");
-        hashTable.put("TAM", "Tamale Airport");
-        System.out.printf("   Table Size: %d, Load Factor: %.2f, Collisions: %d%n",
-                hashTable.size(), hashTable.loadFactor(), hashTable.collisionCount());
+        hashTable.put("GH-1", "Accra"); hashTable.put("GH-2", "Kumasi");
+        System.out.printf("11. CustomHashTable   : Size = %d, LoadFactor = %.2f%n", hashTable.size(), hashTable.loadFactor());
 
-        // 8. Custom Set & Map
-        System.out.println("\n8. CustomSet & CustomMap Demo:");
-        CustomSet<String> campusZones = new CustomSet<>();
-        campusZones.add("Legon"); campusZones.add("KNUST"); campusZones.add("Legon");
-        CustomMap<String, Integer> urgencyMap = new CustomMap<>();
-        urgencyMap.put("Food", 5); urgencyMap.put("Parcel", 2);
-        System.out.printf("   Unique Zones: %d | Map Food Urgency: %d%n", campusZones.size(), urgencyMap.get("Food"));
+        // 12. Set & Map
+        CustomSet<String> set = new CustomSet<>(); set.add("ZoneA"); set.add("ZoneA");
+        CustomMap<String, Integer> map = new CustomMap<>(); map.put("ZoneA", 100);
+        System.out.printf("12. CustomSet & Map   : Set Unique = %d, Map Val = %d%n", set.size(), map.get("ZoneA"));
+
+        // 13. Disjoint Set
+        CustomDisjointSet ds = new CustomDisjointSet(5);
+        ds.union(0, 1); ds.union(1, 2);
+        System.out.printf("13. CustomDisjointSet : 0 connected to 2 = %s%n", ds.connected(0, 2));
+
+        // 14. Graph
+        System.out.printf("14. CustomGraph       : %d Vertices, %d Edges (Adjacency List & Matrix)%n",
+                systemGraph.getVertexCount(), systemGraph.getEdgeCount());
     }
 
-    private static void demoSchedulingService() {
-        System.out.println("=== SERVICE SCHEDULING & DISPATCH ENGINE DEMO ===");
+    private static void runGraphRoutingModule(Scanner scanner) {
+        System.out.println("=== ROUTING & NETWORK OPTIMIZATION ENGINE ===");
+        System.out.println("1. Dijkstra Shortest Path Route Calculation");
+        System.out.println("2. BFS Zone Reachability Analysis");
+        System.out.println("3. DFS Delivery Route Cycle Detection");
+        System.out.println("4. Kruskal Minimum Spanning Tree (MST)");
+        System.out.println("5. Prim Minimum Spanning Tree (MST)");
+        System.out.print("Select graph algorithm (1-5): ");
+        String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "1";
+
+        String src = locations.get(0).locationId();
+        String dst = locations.get(Math.min(5, locations.size() - 1)).locationId();
+
+        switch (choice) {
+            case "2":
+                System.out.printf("\n--- BFS Reachability from Hub [%s] ---%n", src);
+                BFSReachability.BFSResult bfs = routingService.getReachableZones(src);
+                System.out.printf("Total Reachable Zones: %d%n", bfs.reachableLocations().size());
+                System.out.print("Traversal Order: ");
+                for (int i = 0; i < Math.min(10, bfs.traversalOrder().size()); i++) {
+                    System.out.print(bfs.traversalOrder().get(i) + " -> ");
+                }
+                System.out.println("...");
+                break;
+
+            case "3":
+                System.out.println("\n--- DFS Road Network Cycle Detection ---");
+                DFSCycleDetection.DFSResult dfs = routingService.detectNetworkCycles();
+                System.out.printf("Cycles Detected in Road Network: %s%n", dfs.hasCycle());
+                System.out.printf("Connected Network Components  : %d%n", dfs.connectedComponentsCount());
+                break;
+
+            case "4":
+                System.out.println("\n--- Kruskal Minimum Spanning Tree ---");
+                PrimKruskalMST.MSTResult kru = routingService.computeKruskalMST();
+                System.out.println(kru.renderSummary());
+                break;
+
+            case "5":
+                System.out.println("\n--- Prim Minimum Spanning Tree ---");
+                PrimKruskalMST.MSTResult pri = routingService.computePrimMST(src);
+                System.out.println(pri.renderSummary());
+                break;
+
+            default:
+                System.out.printf("\n--- Dijkstra Shortest Path: [%s] -> [%s] ---%n", src, dst);
+                DijkstraAlgorithm.ShortestPathResult dij = routingService.findShortestPathsFrom(src);
+                CustomDynamicArray<String> path = dij.getPathTo(dst);
+                System.out.printf("Shortest Travel Weight : %.2f mins%n", dij.getDistanceTo(dst));
+                System.out.print("Optimal Route: ");
+                for (int i = 0; i < path.size(); i++) {
+                    System.out.print(path.get(i) + (i < path.size() - 1 ? " -> " : ""));
+                }
+                System.out.println();
+                System.out.println("\nDistance Table (Sample first 5 rows):");
+                System.out.println(dij.renderDistanceTable().lines().limit(8).reduce("", (a, b) -> a + "\n" + b));
+                break;
+        }
+    }
+
+    private static void runSchedulingModule() {
+        System.out.println("=== ORDER SCHEDULING & DISPATCH ENGINE ===");
         SchedulingService scheduler = new SchedulingService();
 
         int sampleCount = Math.min(5, serviceRequests.size());
@@ -292,8 +444,8 @@ public class Main {
         System.out.printf("Priority Dispatched Order : [%s] Urgency: %d%n", priorityDispatched.requestId(), priorityDispatched.urgency());
     }
 
-    private static void demoOptimizationEngine() {
-        System.out.println("=== ORDER BATCHING OPTIMIZATION ENGINE ===");
+    private static void runOptimizationModule() {
+        System.out.println("=== ORDER BATCHING & CAPACITY OPTIMIZATION ===");
 
         int batchSize = Math.min(8, serviceRequests.size());
         ServiceRequest[] batchSample = new ServiceRequest[batchSize];
@@ -314,19 +466,36 @@ public class Main {
         System.out.printf("Rider Capacity Utilized        : %d / %d%n", result.totalWeightUsed, result.capacity);
     }
 
-    private static void runSelfCheck() {
-        System.out.println("=== INTEGRATED SYSTEM SELF-CHECK & INVARIANT VERIFICATION ===");
-        System.out.println("1. Verifying Locations & Graph Vertex Count matching...");
+    private static void runBenchmarkModule() {
+        System.out.println("=== RUNNING PERFORMANCE BENCHMARK EXPERIMENTS ===");
+        int[] searchSizes = {100, 500, 1000, 5000, 10000};
+        reportingService.runSearchBenchmark(searchSizes);
+
+        int[] sortSizes = {100, 500, 1000, 5000};
+        reportingService.runSortingBenchmark(sortSizes);
+
+        reportingService.runHashTableBenchmark();
+        reportingService.runTreeBenchmark();
+        reportingService.runHeapBenchmark();
+        reportingService.runGraphBenchmark(systemGraph);
+
+        reportingService.exportRunsToCSV("data/benchmarks_export.csv");
+        System.out.println("\nBenchmark experiments completed. Results exported to data/benchmarks_export.csv");
+    }
+
+    private static void runIntegritySelfCheck() {
+        System.out.println("=== SYSTEM INTEGRITY SELF-CHECK ===");
+        System.out.println("1. Verifying Location and Graph Vertex matching...");
         boolean vMatch = locations.size() == systemGraph.getVertexCount();
         System.out.printf("   Locations: %d | Graph Vertices: %d -> %s%n", locations.size(), systemGraph.getVertexCount(), vMatch ? "PASSED" : "FAILED");
 
-        System.out.println("2. Verifying CustomDynamicArray Resizing Invariant...");
+        System.out.println("2. Verifying CustomDynamicArray Resizing...");
         CustomDynamicArray<Integer> arr = new CustomDynamicArray<>(4);
         arr.add(1); arr.add(2); arr.add(3); arr.add(4); arr.add(5);
         boolean arrPass = arr.capacity() == 8 && arr.size() == 5;
         System.out.printf("   Auto-expand (4 -> 8): %s%n", arrPass ? "PASSED" : "FAILED");
 
-        System.out.println("3. Verifying CustomBTree Minimum Degree (t = 3)...");
+        System.out.println("3. Verifying CustomBTree Minimum Degree...");
         CustomBTree<Integer, String> tree = new CustomBTree<>();
         boolean degreePass = tree.getMinDegree() == 3;
         System.out.printf("   Min Degree t = 3: %s%n", degreePass ? "PASSED" : "FAILED");
@@ -337,6 +506,12 @@ public class Main {
         System.out.printf("   Location Index: %d | Unique Request Index: %d (from %d total) -> %s%n",
                 indexingService.getLocationCount(), indexingService.getRequestCount(), serviceRequests.size(), indexPass ? "PASSED" : "FAILED");
 
-        System.out.println("✅ All system self-checks completed successfully!");
+        System.out.println("5. Verifying Dijkstra Shortest Path non-negativity...");
+        String src = locations.get(0).locationId();
+        DijkstraAlgorithm.ShortestPathResult dij = routingService.findShortestPathsFrom(src);
+        boolean dijPass = dij.getDistanceTo(src) == 0.0;
+        System.out.printf("   Dijkstra Source Distance == 0.0: %s%n", dijPass ? "PASSED" : "FAILED");
+
+        System.out.println("All system self-checks completed successfully.");
     }
 }

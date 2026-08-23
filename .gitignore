@@ -4,10 +4,18 @@
 *.war
 *.ear
 
-# Maven build directory
+# Build directories
+bin/
 target/
+build/
 
-# IDE files
+# Local databases and runtime logs
+*.db
+*.sqlite
+*.log
+dsa_optimizer.db
+
+# IDE and Editor configurations
 .idea/
 *.iml
 .vscode/
@@ -16,11 +24,10 @@ target/
 .project
 *.factorypath
 
-# OS generated files
+# OS temporary files
 .DS_Store
 Thumbs.db
 
-# Local database files & logs
-*.db
-*.sqlite
-*.log
+# Scratch and test output artifacts
+scratch/
+test-output/
