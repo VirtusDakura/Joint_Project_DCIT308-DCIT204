@@ -1,15 +1,7 @@
 package org.ug.dsa.datastructures;
 
 /**
- * Custom generic Binary Search Tree for tree-based indexing over locations and requests.
- *
- * Implements Module M3 and M6 tree index specifications:
- *   - insert(K key, V value) : Inserts key-value pair, updating value if key exists
- *   - search(K key)          : Returns value or null in O(h) time
- *   - delete(K key)          : Deletes node handling leaf, 1-child, and 2-children cases
- *   - inorderTraversal()     : Returns keys in ascending sorted order
- *   - preorderTraversal(), postorderTraversal()
- *   - minimum(), maximum(), height(), size(), isEmpty(), clear()
+ * Generic Binary Search Tree implementation for key-value indexing.
  */
 public class CustomBST<K extends Comparable<K>, V> {
 

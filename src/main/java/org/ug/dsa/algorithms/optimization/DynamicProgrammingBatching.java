@@ -8,10 +8,7 @@ import org.ug.dsa.models.ServiceRequest;
 
 public class DynamicProgrammingBatching {
 
-    /** Index-number-derived demo parameter (3+ index-based parameters). */
     public static final long OWNER_INDEX_NUMBER = 22_380_272L;
-
-    /** Digit-sum of the index number, used to derive a demo capacity/weight scale. */
     public static final int INDEX_DIGIT_SUM = digitSum(OWNER_INDEX_NUMBER);
 
     /**

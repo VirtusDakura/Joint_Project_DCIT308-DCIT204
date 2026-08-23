@@ -3,16 +3,7 @@ package org.ug.dsa.datastructures;
 import java.util.NoSuchElementException;
 
 /**
- * Custom generic Min-Heap / Priority Queue implementation.
- *
- * Implements Module M3 and M5 specifications for priority scheduling:
- *   - insert(T item)     : Adds an element with O(log n) sift-up
- *   - extractMin()       : Removes and returns the smallest element with O(log n) sift-down
- *   - peekMin()          : Returns the smallest element in O(1) without removing
- *   - heapify(T[] array) : Builds a valid heap from an existing array in O(n) time
- *   - size(), isEmpty(), clear()
- *
- * Internal array dynamically doubles in capacity when full.
+ * Generic Min-Heap (Priority Queue) implementation with dynamic resizing.
  */
 public class CustomHeap<T extends Comparable<T>> {
 

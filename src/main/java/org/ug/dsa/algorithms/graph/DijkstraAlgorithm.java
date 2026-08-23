@@ -9,14 +9,7 @@ import java.util.Arrays;
 
 /**
  * Dijkstra's Shortest Path Algorithm Implementation.
- *
- * Computes single-source shortest paths on non-negatively weighted graphs
- * using a custom Min-Heap priority queue.
- *
- * Time Complexity: O((V + E) log V) with Min-Heap.
- * Space Complexity: O(V) for distance table, visited set, and heap.
- *
- * Strict Constraint: Uses custom data structures only (CustomHeap, CustomDynamicArray).
+ * Computes single-source shortest paths on weighted road networks using a Min-Heap.
  */
 public class DijkstraAlgorithm {
 
