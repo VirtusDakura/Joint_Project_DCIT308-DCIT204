@@ -56,6 +56,9 @@ public class Main {
             System.out.print("Select an option (1-11): ");
             if (!scanner.hasNextLine()) break;
             String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                continue;
+            }
 
             System.out.println();
             switch (input) {
@@ -140,7 +143,7 @@ public class Main {
 
         for (int i = 0; i < roads.size(); i++) {
             Road road = roads.get(i);
-            systemGraph.addEdge(road.fromLocationId(), road.toLocationId(), road.getEffectiveWeight());
+            systemGraph.addUndirectedEdge(road.fromLocationId(), road.toLocationId(), road.getEffectiveWeight());
         }
 
         for (int i = 0; i < resources.size(); i++) {
@@ -207,23 +210,33 @@ public class Main {
 
     private static void runSearchingModule(Scanner scanner) {
         System.out.println("=== SEARCH ENGINE ===");
-        System.out.println("1. Linear Search on Service Requests");
+        System.out.println("1. Linear Search on Service Requests (by Request ID)");
         System.out.println("2. Binary Search on Sorted Urgency Levels");
-        System.out.println("3. Precondition Verification on Unsorted Data");
+        System.out.println("3. Precondition Verification on Unsorted Data (Counterexample)");
         System.out.print("Select search option (1-3): ");
         String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "1";
 
         if ("2".equals(choice)) {
+            System.out.print("Enter Urgency Level to search (1-5) [Default: 4]: ");
+            String inputTarget = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+            int target = 4;
+            if (!inputTarget.isEmpty()) {
+                try {
+                    target = Integer.parseInt(inputTarget);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid integer entered. Using default urgency = 4.");
+                }
+            }
+
             Integer[] urgencies = new Integer[serviceRequests.size()];
             for (int i = 0; i < serviceRequests.size(); i++) {
                 urgencies[i] = serviceRequests.get(i).urgency();
             }
             QuickSort.sort(urgencies);
 
-            int target = 4;
             BinarySearch.BinarySearchResult<Integer> res = BinarySearch.search(urgencies, target);
-            System.out.printf("Searching for Urgency Level %d in %d sorted records...%n", target, urgencies.length);
-            System.out.printf("Found: %s at Index %d | Comparisons: %d | Precondition Met: %s%n",
+            System.out.printf("Searching for Urgency Level %d across %d sorted records...%n", target, urgencies.length);
+            System.out.printf("Found: %s at Index %d | Comparisons Made: %d | Precondition Met: %s%n",
                     res.found(), res.index(), res.comparisonCount(), res.preconditionMet());
         } else if ("3".equals(choice)) {
             Integer[] unsorted = new Integer[]{5, 1, 4, 2, 8, 3};
@@ -235,14 +248,24 @@ public class Main {
             System.out.printf("Unchecked BinarySearch: Found=%s, Index=%d (Precondition violation caused missed search)%n",
                     resUnchecked.found(), resUnchecked.index());
         } else {
-            String targetId = serviceRequests.get(Math.min(10, serviceRequests.size() - 1)).requestId();
+            System.out.print("Enter Request ID to search (e.g. ORD-001 to ORD-345) [Default: ORD-011]: ");
+            String inputTarget = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+            String targetId = inputTarget.isEmpty() ? "ORD-011" : inputTarget.toUpperCase();
+
             CustomDynamicArray<String> ids = new CustomDynamicArray<>();
             for (int i = 0; i < serviceRequests.size(); i++) {
                 ids.add(serviceRequests.get(i).requestId());
             }
             LinearSearch.SearchResult<String> res = LinearSearch.search(ids, targetId);
             System.out.printf("Linear Search for Request ID '%s' across %d records:%n", targetId, ids.size());
-            System.out.printf("Found: %s at Index %d | Comparisons Made: %d%n", res.found(), res.index(), res.comparisonCount());
+            System.out.printf("Found: %s | Index: %d | Comparisons Made: %d%n",
+                    res.found(), res.index(), res.comparisonCount());
+            
+            if (res.found() && res.index() >= 0 && res.index() < serviceRequests.size()) {
+                ServiceRequest req = serviceRequests.get(res.index());
+                System.out.printf("Order Details: [%s] Urgency: %d | Category: %s | %s -> %s | Status: %s%n",
+                        req.requestId(), req.urgency(), req.category(), req.sourceLocationId(), req.destinationLocationId(), req.status());
+            }
         }
     }
 
@@ -255,42 +278,59 @@ public class Main {
         System.out.print("Select sorting algorithm (1-4): ");
         String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "4";
 
-        int sampleSize = Math.min(10, serviceRequests.size());
+        System.out.printf("How many requests to sort? (5 to %d) [Default: 10]: ", serviceRequests.size());
+        String countInput = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+        int sampleSize = 10;
+        if (!countInput.isEmpty()) {
+            try {
+                int parsed = Integer.parseInt(countInput);
+                sampleSize = Math.max(5, Math.min(parsed, serviceRequests.size()));
+            } catch (NumberFormatException e) {
+                sampleSize = 10;
+            }
+        }
+
         ServiceRequest[] sampleArr = new ServiceRequest[sampleSize];
         for (int i = 0; i < sampleSize; i++) {
             sampleArr[i] = serviceRequests.get(i);
         }
 
-        System.out.println("\n--- Unsorted Sample (First 10) ---");
-        for (ServiceRequest req : sampleArr) {
+        System.out.printf("\n--- Unsorted Sample (First %d records) ---%n", Math.min(5, sampleSize));
+        for (int i = 0; i < Math.min(5, sampleSize); i++) {
+            ServiceRequest req = sampleArr[i];
             System.out.printf("  * [%s] Urgency: %d | Deadline: %s%n", req.requestId(), req.urgency(), req.deadline());
         }
+        if (sampleSize > 5) System.out.println("  ... (remaining records omitted for brevity)");
 
         long start = System.nanoTime();
+        String algoName;
         switch (choice) {
             case "1":
+                algoName = "Selection Sort";
                 SelectionSort.sort(sampleArr);
-                System.out.println("\n--- Sorted via Selection Sort ---");
                 break;
             case "2":
+                algoName = "Insertion Sort";
                 InsertionSort.sort(sampleArr);
-                System.out.println("\n--- Sorted via Insertion Sort ---");
                 break;
             case "3":
+                algoName = "Merge Sort";
                 MergeSort.sort(sampleArr);
-                System.out.println("\n--- Sorted via Merge Sort ---");
                 break;
             default:
+                algoName = "QuickSort";
                 QuickSort.sort(sampleArr);
-                System.out.println("\n--- Sorted via QuickSort ---");
                 break;
         }
         long durationNs = System.nanoTime() - start;
 
-        for (ServiceRequest req : sampleArr) {
+        System.out.printf("%n--- Sorted via %s (Top %d shown) ---%n", algoName, Math.min(5, sampleSize));
+        for (int i = 0; i < Math.min(5, sampleSize); i++) {
+            ServiceRequest req = sampleArr[i];
             System.out.printf("  * [%s] Urgency: %d | Deadline: %s%n", req.requestId(), req.urgency(), req.deadline());
         }
-        System.out.printf("%nExecution Time: %.3f ms%n", durationNs / 1_000_000.0);
+        if (sampleSize > 5) System.out.println("  ... (remaining records sorted in memory)");
+        System.out.printf("%nSorted %d records in %.3f ms%n", sampleSize, durationNs / 1_000_000.0);
     }
 
     private static void runDataStructuresDiagnostics() {
@@ -376,19 +416,24 @@ public class Main {
         System.out.print("Select graph algorithm (1-5): ");
         String choice = scanner.hasNextLine() ? scanner.nextLine().trim() : "1";
 
-        String src = locations.get(0).locationId();
-        String dst = locations.get(Math.min(5, locations.size() - 1)).locationId();
-
         switch (choice) {
             case "2":
-                System.out.printf("\n--- BFS Reachability from Hub [%s] ---%n", src);
-                BFSReachability.BFSResult bfs = routingService.getReachableZones(src);
-                System.out.printf("Total Reachable Zones: %d%n", bfs.reachableLocations().size());
-                System.out.print("Traversal Order: ");
-                for (int i = 0; i < Math.min(10, bfs.traversalOrder().size()); i++) {
-                    System.out.print(bfs.traversalOrder().get(i) + " -> ");
+                System.out.print("Enter Start Location ID (e.g. L001 to L052) [Default: L001]: ");
+                String bfsSrcInput = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+                String bfsSrc = bfsSrcInput.isEmpty() ? "L001" : bfsSrcInput.toUpperCase();
+                if (systemGraph.indexOfVertex(bfsSrc) == -1) {
+                    System.out.printf("Location '%s' not found. Falling back to L001.%n", bfsSrc);
+                    bfsSrc = "L001";
                 }
-                System.out.println("...");
+
+                System.out.printf("\n--- BFS Reachability from Hub [%s] ---%n", bfsSrc);
+                BFSReachability.BFSResult bfs = routingService.getReachableZones(bfsSrc);
+                System.out.printf("Total Reachable Zones: %d / %d vertices%n", bfs.reachableLocations().size(), systemGraph.getVertexCount());
+                System.out.print("Traversal Order (First 10): ");
+                for (int i = 0; i < Math.min(10, bfs.traversalOrder().size()); i++) {
+                    System.out.print(bfs.traversalOrder().get(i) + (i < Math.min(10, bfs.traversalOrder().size()) - 1 ? " -> " : ""));
+                }
+                System.out.println(" ...");
                 break;
 
             case "3":
@@ -405,13 +450,41 @@ public class Main {
                 break;
 
             case "5":
-                System.out.println("\n--- Prim Minimum Spanning Tree ---");
-                PrimKruskalMST.MSTResult pri = routingService.computePrimMST(src);
+                System.out.print("Enter Root Location ID for Prim (e.g. L001 to L052) [Default: L001]: ");
+                String priSrcInput = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+                String priSrc = priSrcInput.isEmpty() ? "L001" : priSrcInput.toUpperCase();
+                if (systemGraph.indexOfVertex(priSrc) == -1) {
+                    priSrc = "L001";
+                }
+                System.out.printf("\n--- Prim Minimum Spanning Tree from [%s] ---%n", priSrc);
+                PrimKruskalMST.MSTResult pri = routingService.computePrimMST(priSrc);
                 System.out.println(pri.renderSummary());
                 break;
 
             default:
-                System.out.printf("\n--- Dijkstra Shortest Path: [%s] -> [%s] ---%n", src, dst);
+                System.out.print("Enter Source Location ID [Default: L001]: ");
+                String sInput = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+                String src = sInput.isEmpty() ? "L001" : sInput.toUpperCase();
+
+                System.out.print("Enter Destination Location ID [Default: L006]: ");
+                String dInput = scanner.hasNextLine() ? scanner.nextLine().trim() : "";
+                String dst = dInput.isEmpty() ? "L006" : dInput.toUpperCase();
+
+                if (systemGraph.indexOfVertex(src) == -1) {
+                    System.out.printf("Unknown source '%s', defaulting to L001.%n", src);
+                    src = "L001";
+                }
+                if (systemGraph.indexOfVertex(dst) == -1) {
+                    System.out.printf("Unknown destination '%s', defaulting to L006.%n", dst);
+                    dst = "L006";
+                }
+
+                Location srcLoc = indexingService.getLocation(src);
+                Location dstLoc = indexingService.getLocation(dst);
+                String srcName = (srcLoc != null) ? srcLoc.name() : src;
+                String dstName = (dstLoc != null) ? dstLoc.name() : dst;
+
+                System.out.printf("\n--- Dijkstra Shortest Path: [%s] (%s) -> [%s] (%s) ---%n", src, srcName, dst, dstName);
                 DijkstraAlgorithm.ShortestPathResult dij = routingService.findShortestPathsFrom(src);
                 CustomDynamicArray<String> path = dij.getPathTo(dst);
                 System.out.printf("Shortest Travel Weight : %.2f mins%n", dij.getDistanceTo(dst));
@@ -420,8 +493,8 @@ public class Main {
                     System.out.print(path.get(i) + (i < path.size() - 1 ? " -> " : ""));
                 }
                 System.out.println();
-                System.out.println("\nDistance Table (Sample first 5 rows):");
-                System.out.println(dij.renderDistanceTable().lines().limit(8).reduce("", (a, b) -> a + "\n" + b));
+                System.out.println("\nDistance Table (Sample first 6 locations):");
+                System.out.println(dij.renderDistanceTable().lines().limit(9).reduce("", (a, b) -> a + "\n" + b));
                 break;
         }
     }

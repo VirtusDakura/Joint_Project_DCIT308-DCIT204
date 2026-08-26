@@ -34,6 +34,7 @@ public class DatabaseManager {
     private static Connection connection;
     private static final String SQLITE_URL = "jdbc:sqlite:dsa_optimizer.db";
     private static boolean isPostgres = false;
+    private static boolean connectionLogged = false;
 
     /**
      * Get or establish a database connection.
@@ -53,18 +54,26 @@ public class DatabaseManager {
             if (dbUrl != null && dbUser != null && dbPass != null) {
                 connection = DriverManager.getConnection(dbUrl, dbUser, dbPass);
                 isPostgres = true;
-                System.out.println("[DB] Connected to PostgreSQL");
+                if (!connectionLogged) {
+                    System.out.println("[DB] Connected to PostgreSQL");
+                    connectionLogged = true;
+                }
                 return connection;
             }
         } catch (SQLException e) {
-            System.out.println("[DB] PostgreSQL connection failed, attempting SQLite fallback...");
+            if (!connectionLogged) {
+                System.out.println("[DB] PostgreSQL connection failed, attempting SQLite fallback...");
+            }
         }
 
         // Fallback to SQLite
         try {
             connection = DriverManager.getConnection(SQLITE_URL);
             isPostgres = false;
-            System.out.println("[DB] Connected to SQLite: " + SQLITE_URL);
+            if (!connectionLogged) {
+                System.out.println("[DB] Connected to SQLite: " + SQLITE_URL);
+                connectionLogged = true;
+            }
             return connection;
         } catch (SQLException e) {
             throw new SQLException("Failed to establish database connection", e);

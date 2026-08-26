@@ -73,7 +73,8 @@ java -cp bin org.ug.dsa.TestRunner
 │   ├── TECHNICAL_REPORT.md        # Technical project report
 │   ├── COUNTEREXAMPLES.md         # Algorithmic counterexamples
 │   ├── trace-tables/              # Trace tables (Traces 1 to 7)
-│   └── proof-sketches/            # Proof sketches (Proofs 1 to 3)
+│   ├── proof-sketches/            # Proof sketches (Proofs 1 to 3)
+│   └── performance-graphs/        # Algorithm performance benchmark graphs (Experiments 1–6)
 └── src/
     ├── main/java/org/ug/dsa/
     │   ├── Main.java              # Interactive console application
