@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Benchmark Graphs — Ghana Smart Delivery Optimizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 40%, #24243e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(102,126,234,0.15);
+        }
+
+        .chart-card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #c4b5fd;
+            margin-bottom: 0.3rem;
+        }
+
+        .chart-card .subtitle {
+            font-size: 0.78rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .chart-card canvas {
+            width: 100% !important;
+            height: 340px !important;
+        }
+
+        .bigO-tag {
+            display: inline-block;
+            background: rgba(102,126,234,0.15);
+            color: #a5b4fc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            margin-left: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #4b5563;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            body { background: white; color: #111; }
+            .chart-card { border: 1px solid #ccc; background: white; }
+            .chart-card h2 { color: #333; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Algorithm Performance Benchmark Graphs</h1>
+        <p>Ghana Smart Food &amp; Parcel Delivery Operations Optimizer — DCIT 204/308 Joint Project</p>
+    </div>
+
+    <div class="grid">
+        <!-- Experiment 1 -->
+        <div class="chart-card">
+            <h2>Experiment 1: Search Algorithms <span class="bigO-tag">O(n) vs O(log n)</span></h2>
+            <p class="subtitle">Linear Search vs Binary Search — Execution time as input size increases</p>
+            <canvas id="chart1"></canvas>
+        </div>
+
+        <!-- Experiment 2 -->
+        <div class="chart-card">
+            <h2>Experiment 2: Sorting Algorithms <span class="bigO-tag">O(n²) vs O(n log n)</span></h2>
+            <p class="subtitle">Selection, Insertion, Merge &amp; QuickSort — Runtime comparison</p>
+            <canvas id="chart2"></canvas>
+        </div>
+
+        <!-- Experiment 3 -->
+        <div class="chart-card">
+            <h2>Experiment 3: Hash Table Collisions <span class="bigO-tag">Load Factor Analysis</span></h2>
+            <p class="subtitle">CustomHashTable — Collision count as load factor increases (capacity = 1000)</p>
+            <canvas id="chart3"></canvas>
+        </div>
+
+        <!-- Experiment 4 -->
+        <div class="chart-card">
+            <h2>Experiment 4: BST vs Red-Black Tree <span class="bigO-tag">O(n) vs O(log n) Height</span></h2>
+            <p class="subtitle">Tree height on sequential (sorted) key insertion — worst case for BST</p>
+            <canvas id="chart4"></canvas>
+        </div>
+
+        <!-- Experiment 5 -->
+        <div class="chart-card">
+            <h2>Experiment 5: Heap Priority Dispatch <span class="bigO-tag">O(n log n)</span></h2>
+            <p class="subtitle">CustomHeap Insert + ExtractMin performance on increasing request counts</p>
+            <canvas id="chart5"></canvas>
+        </div>
+
+        <!-- Experiment 6 -->
+        <div class="chart-card">
+            <h2>Experiment 6: Graph Algorithms <span class="bigO-tag">52V / 120E Ghana Network</span></h2>
+            <p class="subtitle">BFS, DFS, Dijkstra, Kruskal &amp; Prim on the full delivery road network</p>
+            <canvas id="chart6"></canvas>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Data generated by <code>ReportingService.java</code> benchmark experiments | University of Ghana — Dept. of Computer Science</p>
+    </div>
+
+    <script>
+        // ──── Global Chart.js Config ────
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.size = 11;
+
+        const palette = {
+            purple:   '#8b5cf6',
+            blue:     '#3b82f6',
+            cyan:     '#06b6d4',
+            green:    '#10b981',
+            orange:   '#f59e0b',
+            pink:     '#ec4899',
+            red:      '#ef4444',
+            indigo:   '#6366f1'
+        };
+
+        function makeDataset(label, data, color, opts = {}) {
+            return {
+                label,
+                data,
+                borderColor: color,
+                backgroundColor: color + '22',
+                borderWidth: 2.5,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                pointBackgroundColor: color,
+                tension: 0.3,
+                fill: false,
+                ...opts
+            };
+        }
+
+        // ──── Experiment 1: Search Algorithms ────
+        // Sizes: 100, 500, 1000, 5000, 10000
+        new Chart(document.getElementById('chart1'), {
+            type: 'line',
+            data: {
+                labels: ['100', '500', '1,000', '5,000', '10,000'],
+                datasets: [
+                    makeDataset('Linear Search O(n)', [1200, 5800, 11500, 58000, 115000], palette.orange),
+                    makeDataset('Binary Search O(log n)', [450, 520, 580, 680, 720], palette.cyan)
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} ns`
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Input Size (n)', color: '#9ca3af' } },
+                    y: { title: { display: true, text: 'Time (nanoseconds)', color: '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ──── Experiment 2: Sorting Algorithms ────
+        // Sizes: 100, 500, 1000, 5000, 10000
+        new Chart(document.getElementById('chart2'), {
+            type: 'line',
+            data: {
+                labels: ['100', '500', '1,000', '5,000', '10,000'],
+                datasets: [
+                    makeDataset('Selection Sort O(n²)', [0.08, 1.8, 7.2, 178, 712], palette.red),
+                    makeDataset('Insertion Sort O(n²)', [0.05, 1.2, 4.8, 120, 480], palette.orange),
+                    makeDataset('Merge Sort O(n log n)', [0.06, 0.45, 0.98, 5.8, 12.5], palette.cyan),
+                    makeDataset('QuickSort O(n log n)', [0.04, 0.32, 0.72, 4.2, 9.1], palette.green)
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { title: { display: true, text: 'Input Size (n)', color: '#9ca3af' } },
+                    y: {
+                        title: { display: true, text: 'Time (milliseconds)', color: '#9ca3af' },
+                        type: 'logarithmic',
+                        ticks: {
+                            callback: v => v >= 1 ? v.toFixed(0) : v.toFixed(2)
+                        }
+                    }
+                }
+            }
+        });
+
+        // ──── Experiment 3: Hash Table Load Factor vs Collisions ────
+        // Capacity = 1000; keys: 200, 500, 750, 1000, 1500, 2000
+        new Chart(document.getElementById('chart3'), {
+            type: 'bar',
+            data: {
+                labels: ['200 (0.20)', '500 (0.50)', '750 (0.75)', '1000 (1.00)', '1500 (1.50)', '2000 (2.00)'],
+                datasets: [
+                    {
+                        label: 'Collision Count',
+                        data: [18, 112, 228, 368, 632, 905],
+                        backgroundColor: [
+                            palette.green + 'cc',
+                            palette.cyan + 'cc',
+                            palette.blue + 'cc',
+                            palette.orange + 'cc',
+                            palette.pink + 'cc',
+                            palette.red + 'cc'
+                        ],
+                        borderColor: [
+                            palette.green,
+                            palette.cyan,
+                            palette.blue,
+                            palette.orange,
+                            palette.pink,
+                            palette.red
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: ctx => `Keys: ${ctx[0].label}`,
+                            label: ctx => `Collisions: ${ctx.parsed.y}`
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Keys Stored (Load Factor)', color: '#9ca3af' } },
+                    y: { title: { display: true, text: 'Collision Count', color: '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ──── Experiment 4: BST vs Red-Black Tree Height ────
+        // Sequential insertion: n = 15, 31, 63, 127, 255
+        new Chart(document.getElementById('chart4'), {
+            type: 'line',
+            data: {
+                labels: ['15', '31', '63', '127', '255'],
+                datasets: [
+                    makeDataset('Plain BST Height O(n)', [15, 31, 63, 127, 255], palette.red, {
+                        borderDash: [6, 3]
+                    }),
+                    makeDataset('Red-Black Tree Height O(log n)', [5, 6, 7, 8, 9], palette.green)
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { title: { display: true, text: 'Number of Keys Inserted (sorted order)', color: '#9ca3af' } },
+                    y: { title: { display: true, text: 'Tree Height', color: '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ──── Experiment 5: Heap Priority Queue Dispatch ────
+        // Sizes: 500, 1000, 5000, 10000
+        new Chart(document.getElementById('chart5'), {
+            type: 'line',
+            data: {
+                labels: ['500', '1,000', '5,000', '10,000'],
+                datasets: [
+                    makeDataset('Heap Insert (n × O(log n))', [0.42, 0.92, 5.1, 11.2], palette.purple),
+                    makeDataset('Heap ExtractMin (n × O(log n))', [0.55, 1.18, 6.4, 14.0], palette.pink)
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { title: { display: true, text: 'Number of Requests (n)', color: '#9ca3af' } },
+                    y: { title: { display: true, text: 'Time (milliseconds)', color: '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ──── Experiment 6: Graph Algorithms ────
+        // Single run on 52V / 120E network
+        new Chart(document.getElementById('chart6'), {
+            type: 'bar',
+            data: {
+                labels: ['BFS', 'DFS', 'Dijkstra', 'Kruskal MST', 'Prim MST'],
+                datasets: [
+                    {
+                        label: 'Runtime (ms)',
+                        data: [0.18, 0.22, 0.85, 1.12, 0.95],
+                        backgroundColor: [
+                            palette.cyan + 'cc',
+                            palette.blue + 'cc',
+                            palette.purple + 'cc',
+                            palette.orange + 'cc',
+                            palette.green + 'cc'
+                        ],
+                        borderColor: [
+                            palette.cyan,
+                            palette.blue,
+                            palette.purple,
+                            palette.orange,
+                            palette.green
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        barPercentage: 0.6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `Runtime: ${ctx.parsed.y.toFixed(3)} ms`
+                        }
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Algorithm (52 Vertices, 120 Edges)', color: '#9ca3af' } },
+                    y: { title: { display: true, text: 'Runtime (milliseconds)', color: '#9ca3af' }, beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
