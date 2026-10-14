@@ -46,7 +46,7 @@ All academic documentation and project deliverables are stored in this repositor
 
 | Document | Format | Description & Link |
 | :--- | :---: | :--- |
-| **Submission Checklist & Cover Sheet** | DOCX | [DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx](DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx) — Completed cover sheet |
+| **Submission Checklist & Cover Sheet** | DOCX | [docs/DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx](docs/DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx) — Completed cover sheet |
 | **Technical Report** | Markdown / DOCX | [docs/TECHNICAL_REPORT.md](docs/TECHNICAL_REPORT.md) &bull; [docs/TECHNICAL_REPORT.docx](docs/TECHNICAL_REPORT.docx) — Full project report |
 | **Algorithmic Counterexamples** | Markdown | [docs/COUNTEREXAMPLES.md](docs/COUNTEREXAMPLES.md) — Precondition failures for Binary Search & Greedy batching |
 | **Trace Tables** | 7 Traces | [docs/trace-tables/](docs/trace-tables/) — Binary Search, Selection Sort, Insertion Sort, Merge Sort, Dijkstra, 0/1 Knapsack DP, Kruskal MST |
@@ -82,7 +82,6 @@ java -cp bin org.ug.dsa.TestRunner
 ├── build_and_test.ps1                         # Build and test execution script
 ├── pom.xml                                    # Maven build configuration
 ├── README.md                                  # Project overview and documentation links
-├── DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx # Completed submission checklist
 ├── dsa_optimizer.db                           # SQLite database file
 ├── data/                                      # Data files and database scripts
 │   ├── locations.csv                          # 52 delivery locations
@@ -92,6 +91,7 @@ java -cp bin org.ug.dsa.TestRunner
 │   ├── algorithm_benchmark_runs.csv           # 55 empirical runtime runs
 │   └── schema.sql                             # Database schema definition
 ├── docs/                                      # Project documentation
+│   ├── DCIT_308_Industry_Project_Checklist_Cover_Sheet.docx # Completed submission checklist
 │   ├── TECHNICAL_REPORT.md                    # Technical report in Markdown
 │   ├── TECHNICAL_REPORT.docx                  # Technical report in Word DOCX format
 │   ├── COUNTEREXAMPLES.md                     # Algorithmic counterexamples
