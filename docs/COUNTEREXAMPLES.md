@@ -1,7 +1,7 @@
 # Formal Algorithmic Counterexamples & Precondition Proofs
 > **Department of Computer Science — University of Ghana**  
 > **DCIT 204 / DCIT 308 Joint Semester Project**  
-> **Section 10 Requirement**: *At least two counterexamples: one greedy failure and one invalid precondition such as unsorted binary search input.*
+> **Team Name**: MindCraft_Sub_1  
 
 ---
 
@@ -32,20 +32,20 @@ Target to find: $T = 10$ (which clearly exists at index $i = 1$).
 3. **Termination:** $low (0) > high (-1) \implies$ Loop terminates.
    - **Result returned:** $-1$ (NOT FOUND).
 
-### 3. Impact & System Mitigation
-Because the precondition $A[0] \le A[1] \le \dots$ was violated ($A[0] = 50 > A[1] = 10$), the algorithm erroneously eliminated index 1.
-**Code Defense Implementation in `BinarySearch.java`:**
-The method `BinarySearch.search()` enforces `isSorted()` verification before binary partitioning. If the array is unsorted, it halts safely with `preconditionMet = false`.
+### 3. Impact & Handling
+Because the precondition $A[0] \le A[1] \le \dots$ was violated ($A[0] = 50 > A[1] = 10$), the algorithm eliminated index 1 incorrectly.
+**Implementation in `BinarySearch.java`:**
+The method `BinarySearch.search()` runs an `isSorted()` verification before binary partitioning. If the array is not sorted, it halts safely with `preconditionMet = false`.
 
 ---
 
 ## 🚫 Counterexample 2: Greedy Priority Choice Failure vs. 0/1 Knapsack Dynamic Programming
 
 ### 1. Theoretical Limitation of the Greedy Choice Property
-A Greedy algorithm makes the locally optimal choice at each step (e.g., highest urgency, highest value-to-weight density, or earliest deadline) without considering downstream capacity consequences. In the **0/1 Knapsack Problem** (where items cannot be divided), the greedy heuristic fails because choosing a high-density item may leave an awkward amount of unused capacity that cannot be filled by remaining valuable items.
+A Greedy algorithm makes the locally best choice at each step (such as highest urgency density or earliest deadline) without looking ahead at capacity consequences. In the **0/1 Knapsack Problem** (where items cannot be divided), greedy can fail because taking a single high-density item may leave an awkward amount of leftover space that cannot fit other useful items.
 
 ### 2. Concrete Delivery Batching Counterexample
-Suppose a delivery rider (e.g., motorbike) has a total cargo capacity budget of:
+Suppose a delivery rider has a total carrying capacity of:
 $$W = 50 \text{ weight units}$$
 
 Consider three pending customer orders with urgency values $v_i$ and capacity loads $w_i$:
@@ -60,23 +60,23 @@ Consider three pending customer orders with urgency values $v_i$ and capacity lo
 #### Approach 1: Greedy Dispatch Heuristic (Priority by Urgency Density)
 1. **Step 1:** Select highest density order $\to$ **REQ-A** ($w_1 = 30, v_1 = 60$).
    - Remaining rider capacity: $50 - 30 = 20$.
-2. **Step 2:** Next best density is REQ-B ($w_2 = 25$). However, $w_2 (25) > \text{Remaining Capacity } (20)$. REQ-B cannot fit.
+2. **Step 2:** Next best density is REQ-B ($w_2 = 25$). However, $w_2 (25) > 20$. REQ-B cannot fit.
 3. **Step 3:** Next is REQ-C ($w_3 = 25$). $w_3 (25) > 20$. REQ-C cannot fit.
 - **Greedy Outcome:**
   - Selected Orders: `[REQ-A]`
   - Total Urgency Value Achieved: **60**
-  - Capacity Utilized: $30 / 50$ (20 units wasted).
+  - Capacity Utilized: $30 / 50$ (20 units unused).
 
 #### Approach 2: 0/1 Knapsack Dynamic Programming (`DynamicProgrammingBatching.java`)
-The DP solver considers all subset combinations via the recurrence relation:
+The DP solver considers all subset combinations using the recurrence relation:
 $$dp[i][w] = \max(dp[i-1][w], v_i + dp[i-1][w - w_i])$$
 
 - Optimal Subset Selected: `[REQ-B, REQ-C]`
-- Total Weight Used: $25 + 25 = 50 / 50$ ($100\%$ capacity utilization).
+- Total Weight Used: $25 + 25 = 50 / 50$ (100% capacity utilized).
 - Total Urgency Value Achieved: $45 + 45 = \mathbf{90}$.
 
 $$\text{DP Optimal Value (90)} > \text{Greedy Value (60)} \implies \mathbf{+50\% \text{ Improvement}}$$
 
-### 4. Conclusion for Oral Defense & Report
-- **Greedy is optimal for Fractional Knapsack and Earliest Deadline First (EDF) unit tasks**, but **sub-optimal for 0/1 multi-capacity batching**.
-- Dynamic Programming guarantees the global maximum by exploring overlapping subproblems and memoizing intermediate states in $O(n \cdot W)$ time.
+### 4. Conclusion
+- **Greedy is optimal for Fractional Knapsack and unit-duration scheduling**, but **sub-optimal for 0/1 multi-capacity batching**.
+- Dynamic Programming finds the global optimum by evaluating overlapping subproblems and memoizing states in $O(n \cdot W)$ time.

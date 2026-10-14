@@ -9,6 +9,7 @@
 ---
 
 ### **Project Title**: Ghana Smart Food & Parcel Delivery Operations Optimizer
+### **Team Name**: MindCraft_Sub_1
 ### **Group Leader**: Virtus Dakura (22052950)
 ### **Semester**: Second Semester, 2025/2026 Academic Year
 
@@ -26,16 +27,15 @@
    - 7.1 Trace Tables
    - 7.2 Proof Sketches
    - 7.3 Counterexamples
-8. [AI-Resistance: Index Number Parameter Derivations](#8-ai-resistance-index-number-parameter-derivations)
+8. [Parameters Derived from Student Index Numbers](#8-parameters-derived-from-student-index-numbers)
 9. [Empirical Efficiency Experiments](#9-empirical-efficiency-experiments)
 10. [Dataset Description](#10-dataset-description)
 11. [Testing and Quality Assurance](#11-testing-and-quality-assurance)
-12. [Team Collaboration and Cross-Level Mentorship](#12-team-collaboration-and-cross-level-mentorship)
-13. [Oral Defense Preparation](#13-oral-defense-preparation)
-14. [Lessons Learned](#14-lessons-learned)
-15. [Conclusion](#15-conclusion)
-16. [References](#16-references)
-17. [Appendices](#17-appendices)
+12. [Team Members](#12-team-members)
+13. [Lessons Learned](#13-lessons-learned)
+14. [Conclusion](#14-conclusion)
+15. [References](#15-references)
+16. [Appendices](#16-appendices)
 
 ---
 
@@ -62,7 +62,7 @@ Food and parcel delivery logistics in urban Ghanaian cities such as Accra face c
 3. **Implement all required algorithms**: Linear Search, Binary Search, Selection Sort, Insertion Sort, Merge Sort, QuickSort, BFS, DFS, Dijkstra, Prim, Kruskal, Greedy, and Dynamic Programming.
 4. **Demonstrate correctness** through trace tables, proof sketches, and counterexamples.
 5. **Conduct empirical efficiency experiments** comparing theoretical Big-O predictions with measured runtimes.
-6. **Derive algorithm parameters** from team member university index numbers (AI-resistance measure).
+6. **Derive algorithm parameters** from team member university index numbers as specified in the course brief.
 
 ### 2.3 Scope and Constraints
 
@@ -576,9 +576,9 @@ Full derivations with step-by-step execution traces are in `docs/COUNTEREXAMPLES
 
 ---
 
-## 8. AI-Resistance: Index Number Parameter Derivations
+## 8. Parameters Derived from Student Index Numbers
 
-As required by Section 2(iii) of the brief, the following algorithm parameters are derived from team member university index numbers, making the codebase unique to our team. The formulas are implemented in `IndexParameters.java`.
+As required by Section 2(iii) of the project brief, the following algorithm parameters are derived from team member university index numbers. The formulas are implemented in `IndexParameters.java`.
 
 ### Parameter 1: Hash Table Base Size
 - **Source Index**: Virtus Dakura — 22052950
@@ -802,67 +802,34 @@ This script compiles all Java source files, runs the `TestRunner`, and reports r
 
 ---
 
-## 12. Team Collaboration and Cross-Level Mentorship
+## 12. Team Members
 
-### 12.1 Collaboration Philosophy
+The project was carried out jointly by students from DCIT 308 (Level 300) and DCIT 204 (Level 200):
 
-Our team was organised into **5 Cross-Level Collaborative Mentorship Pods**, where each DCIT 308 (Level 300) student served as a lead mentor paired with 1–2 DCIT 204 (Level 200) students. Rather than segregating work by course level (structures vs algorithms), each pod worked across the full stack: co-developing custom data structures, implementing algorithms that use those structures, writing tests, and producing documentation.
+### DCIT 308 (Level 300)
+| Student Name | Student ID | Level | Course |
+| :--- | :---: | :---: | :---: |
+| **Virtus Dakura** (Group Leader) | 22052950 | Level 300 | DCIT 308 |
+| **Seglah Emmanuel** | 22144981 | Level 300 | DCIT 308 |
+| **Collins Edumadze Egyir** | 22233318 | Level 300 | DCIT 308 |
+| **Jessica Zunuo Puozaa** | 22120404 | Level 300 | DCIT 308 |
+| **Rushdan Delimwine Antiku** | 22102540 | Level 300 | DCIT 308 |
 
-### 12.2 Pod Structure
-
-| Pod | Mentor (308) | Mentee(s) (204) | Focus Area |
-|:---:|:---|:---|:---|
-| **Pod 1** | Seglah Emmanuel (22144981) | Koufie Shawn (22304100), Boame Peter (22363563) | Linear Structures & Sorting |
-| **Pod 2** | Collins Egyir (22233318) | Halim Haruna (22119064) | Hashing & Search Indexing |
-| **Pod 3** | Jessica Puozaa (22120404) | Alfred Forson (22380272) | Tree Indexing & DP |
-| **Pod 4** | Rushdan Antiku (22102540) | Timothy Abotsikpuia (22397906), Jonathan Agbo (22034889) | Priority Dispatch & Database |
-| **Pod 5** | Virtus Dakura (22052950) | Emmanuel Asiedu (22319587), Richlove Serwaah (22308313) | Graph Routing & Optimization |
-
-### 12.3 Individual Defense Assignments
-
-Each team member defends **1 Custom Data Structure** and **1 Algorithm** during the oral defense:
-
-| Member | Custom Data Structure | Algorithm |
-|:---|:---|:---|
-| Seglah Emmanuel | CustomLinkedList | Insertion Sort |
-| Koufie Shawn | CustomDynamicArray | Merge Sort |
-| Boame Peter | CustomQueue | QuickSort |
-| Collins Egyir | CustomHashTable | Binary Search |
-| Halim Haruna | CustomSet & CustomMap | Linear Search |
-| Jessica Puozaa | CustomBST & CustomRedBlackTree | Selection Sort |
-| Alfred Forson | CustomBTree | 0/1 Knapsack DP |
-| Rushdan Antiku | CustomHeap | Heap Priority Dispatch |
-| Timothy Abotsikpuia | CustomCircularQueue | Database CRUD & Index Formulas |
-| Jonathan Agbo | CustomStack | BFS Reachability |
-| Virtus Dakura | CustomGraph | Dijkstra's Algorithm |
-| Emmanuel Asiedu | CustomDisjointSet | Kruskal's & Prim's MST |
-| Richlove Serwaah | CustomDeque | Greedy Priority Dispatch |
+### DCIT 204 (Level 200)
+| Student Name | Student ID | Level | Course |
+| :--- | :---: | :---: | :---: |
+| **Koufie, Shawn Ekow** | 22304100 | Level 200 | DCIT 204 |
+| **Boame, Peter** | 22363563 | Level 200 | DCIT 204 |
+| **Halim Hamidu Haruna** | 22119064 | Level 200 | DCIT 204 |
+| **Forson, Alfred** | 22380272 | Level 200 | DCIT 204 |
+| **Timothy Eli Abotsikpuia** | 22397906 | Level 200 | DCIT 204 |
+| **Agbo, Jonathan** | 22034889 | Level 200 | DCIT 204 |
+| **Asiedu, Emmanuel Dede** | 22319587 | Level 200 | DCIT 204 |
+| **Serwaah, Richlove** | 22308313 | Level 200 | DCIT 204 |
 
 ---
 
-## 13. Oral Defense Preparation
-
-### Key Questions and Prepared Responses
-
-**Q1: "How did Level 200s and Level 300s collaborate?"**
-
-> Our team operated in 5 Cross-Level Mentorship Pods. Each Level 300 senior mentored 1–2 Level 200 juniors across full-stack feature modules. For example, in Pod 5, Virtus Dakura (300) mentored Emmanuel Asiedu and Richlove Serwaah (200) across CustomGraph, Dijkstra's algorithm, Kruskal/Prim MST, and Greedy dispatch optimization. Every member defends 1 data structure and 1 algorithm.
-
-**Q2: "What is Richlove's Greedy algorithm?"**
-
-> Richlove implemented the Greedy Priority-Based Request Scheduling & Dispatch Heuristic (Earliest Deadline First / Maximum Urgency Density). This is the canonical textbook greedy strategy from Cormen Chapter 16. She also documented Counterexample #2, demonstrating that on multi-capacity batching, greedy achieves urgency 60 while Dynamic Programming achieves the global optimum of 90 — a 50% improvement.
-
-**Q3: "Why not use Java's built-in collections?"**
-
-> The brief explicitly requires all data containers to be implemented from scratch. We coded 13 custom structures with full generic type support, proper error handling, and dynamic resizing. The only java.util imports are Scanner (console I/O), Arrays (array fill utility), and NoSuchElementException (exception type).
-
-**Q4: "How did you verify correctness?"**
-
-> Three layers: (1) 42 automated test assertions across 15 suites with zero failures, (2) 7 hand-traced trace tables showing variable states at each iteration, and (3) 3 formal proof sketches using loop invariants and recurrence relations. Plus 2 counterexamples demonstrating algorithm failure under violated preconditions.
-
----
-
-## 14. Lessons Learned
+## 13. Lessons Learned
 
 1. **Custom Implementations Deepen Understanding**: Building `CustomHeap` from scratch — implementing `siftUp`, `siftDown`, and bottom-up `heapify` — gave us far deeper understanding of priority queue mechanics than simply calling `PriorityQueue.add()`.
 
@@ -872,15 +839,15 @@ Each team member defends **1 Custom Data Structure** and **1 Algorithm** during 
 
 4. **Red-Black Trees Are Hard But Worthwhile**: Implementing insertion with rotations and recoloring was the most complex single coding task. However, seeing the BST degrade to O(n) height on sorted input while the Red-Black Tree maintained O(log n) made the effort worthwhile.
 
-5. **Cross-Level Mentorship Works**: Having Level 300 students explain tree rotations or Dijkstra's relaxation step to Level 200 students forced deeper understanding on both sides. Teaching is learning.
+5. **Effective Team Collaboration**: Collaborating across course levels allowed the team to cover both fundamentals and advanced algorithms effectively, reinforcing core data structure principles through peer code reviews and shared testing.
 
 ---
 
-## 15. Conclusion
+## 14. Conclusion
 
 The Ghana Smart Food & Parcel Delivery Operations Optimizer successfully demonstrates the practical application of 13 custom data structures and 12+ algorithms to a real-world logistics problem. Every component was implemented from scratch in Java without relying on built-in collection libraries, and verified through automated testing, formal proofs, and empirical benchmarks.
 
-The system meets or exceeds every quantitative threshold specified in the DCIT 204/308 Joint DSA Project Brief:
+The system meets every quantitative threshold specified in the DCIT 204/308 Joint DSA Project Brief:
 
 | Metric | Required | Delivered |
 |:---|:---:|:---:|
@@ -900,7 +867,7 @@ The project demonstrates both theoretical understanding and practical engineerin
 
 ---
 
-## 16. References
+## 15. References
 
 1. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
 2. Sedgewick, R., & Wayne, K. (2011). *Algorithms* (4th ed.). Addison-Wesley.
@@ -910,7 +877,7 @@ The project demonstrates both theoretical understanding and practical engineerin
 
 ---
 
-## 17. Appendices
+## 16. Appendices
 
 ### Appendix A: How to Build and Run
 
@@ -984,4 +951,4 @@ java -cp bin org.ug.dsa.TestRunner
 
 ---
 
-*Report prepared by the Ghana Smart Delivery Optimizer Team, Department of Computer Science, University of Ghana.*
+*Report prepared by MindCraft_Sub_1, Department of Computer Science, University of Ghana.*
